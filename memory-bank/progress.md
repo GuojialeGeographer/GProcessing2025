@@ -45,26 +45,50 @@
 - [x] 编写27个单元测试（tests/test_sampling_base.py）
 - [x] 所有测试通过 ✓
 
+**提交**: commit 6c84d11
+
+### ✅ 步骤 1.2：完善网格采样（2025-01-21）
+- [x] 添加np.random.seed()确保可复现性
+- [x] 完善generate()方法文档和注释
+- [x] 添加空GeoDataFrame边界情况处理
+- [x] 增强optimize_spacing_for_target_n()方法
+- [x] 添加参数验证和错误处理
+- [x] 更新模块docstring
+- [x] 编写32个单元测试（tests/test_grid_sampling.py）
+- [x] 所有测试通过 ✓ (32/32)
+- [x] 导出SamplingConfig到__init__.py
+
+**测试覆盖**:
+- 初始化测试 (3 tests)
+- 网格生成测试 (8 tests)
+- 可复现性测试 (3 tests) ✓
+- 边界情况测试 (4 tests)
+- 优化方法测试 (4 tests)
+- 性能测试 (2 tests)
+- 集成测试 (2 tests)
+
 **代码质量**:
 - 完整的类型提示
 - Google风格docstring
+- Seed可复现性保证
+- 空值处理
 - 详细的错误消息
-- 符合CLAUDE.md规范
 
-**提交**: commit 6c84d11
+**提交**: commit b722483
 
 ---
 
 ## 进行中（In Progress）
 
 ### 🔄 当前任务
-**任务**: 继续第一阶段开发
+**任务**: 继续第一阶段MVP开发
 
-**状态**: 步骤1.1已完成，准备开始步骤1.2
+**状态**: 步骤1.1和1.2已完成，准备开始步骤1.3
 
 **下一步**:
-- [ ] 步骤1.2：实现网格采样完善
-- [ ] 或等待用户确认继续
+- [ ] 步骤1.3：实现GeoJSON导出功能（可选，已部分实现）
+- [ ] 步骤1.4：创建基础CLI（可选）
+- [ ] 或等待用户确认
 
 ---
 
