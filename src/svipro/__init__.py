@@ -10,6 +10,7 @@ Core Modules:
     - metadata: Standardized metadata generation and management
     - reproducibility: Framework for reproducible research protocols
     - visualization: Tools for sampling evaluation and visualization
+    - cli: Command-line interface
 
 Authors:
     Jiale Guo (jiale.guo@mail.polimi.it)

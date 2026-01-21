@@ -28,6 +28,9 @@ dependencies = [
     "pyproj>=3.6.0",
 ]
 
+[project.scripts]
+svipro = "svipro.cli:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.2.1",
