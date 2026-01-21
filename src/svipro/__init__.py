@@ -21,10 +21,7 @@ Geoinformatics Engineering graduate students at Politecnico di Milano
 __version__ = "0.1.0"
 __author__ = "Jiale Guo, Mingfeng Tang"
 
-from svipro.sampling import SamplingStrategy, GridSampling, RoadNetworkSampling
-from svipro.metadata import MetadataManager, SamplingProtocol
-from svipro.reproducibility import ProtocolRecorder
-from svipro.visualization import SamplingVisualizer
+from svipro.sampling import SamplingStrategy, GridSampling
 
 __all__ = [
     "__version__",
@@ -32,12 +29,4 @@ __all__ = [
     # Sampling
     "SamplingStrategy",
     "GridSampling",
-    "RoadNetworkSampling",
-    # Metadata
-    "MetadataManager",
-    "SamplingProtocol",
-    # Reproducibility
-    "ProtocolRecorder",
-    # Visualization
-    "SamplingVisualizer",
 ]

@@ -1,14 +1,22 @@
 """
-Grid Sampling Strategy
+Grid Sampling Strategy Module
 
-Implements regular grid-based sampling. Simple, transparent, and reproducible.
-Best for: uniform coverage, comparative studies, baseline measurements.
+Implements regular grid-based sampling for spatial point generation.
+This is the simplest and most transparent sampling method, ideal for
+baseline measurements and comparative studies.
+
+Grid sampling provides:
+- Uniform spatial coverage
+- Complete reproducibility (same parameters = same results)
+- Easy to understand and validate
+- Fast computation
 """
 
+from datetime import datetime
+from typing import Optional
 import numpy as np
 import geopandas as gpd
 from shapely.geometry import Point, Polygon
-from typing import Optional
 
 from svipro.sampling.base import SamplingStrategy, SamplingConfig
 
@@ -45,13 +53,31 @@ class GridSampling(SamplingStrategy):
         """
         Generate grid sample points within boundary.
 
+        Creates a regular grid of sample points with the specified spacing.
+        Points are generated at the intersection of grid lines, and only
+        points that fall within the boundary are retained.
+
         Args:
             boundary: Area of interest as shapely Polygon
 
         Returns:
-            GeoDataFrame with grid sample points
+            GeoDataFrame with grid sample points containing:
+                - geometry: Point geometries
+                - sample_id: Unique identifier
+                - strategy: Strategy name
+                - timestamp: Generation timestamp
+                - grid_x, grid_y: Grid indices
+                - spacing_m: Spacing used
+
+        Raises:
+            ValueError: If boundary is invalid
         """
+        # Validate boundary
+        self._validate_boundary(boundary)
+
+        # Store boundary and timestamp
         self.config.boundary = boundary
+        self._generation_timestamp = datetime.now()
 
         # Get boundary bounds
         minx, miny, maxx, maxy = boundary.bounds
@@ -71,6 +97,7 @@ class GridSampling(SamplingStrategy):
                         'geometry': point,
                         'sample_id': f"{self.strategy_name}_{i:04d}_{j:04d}",
                         'strategy': self.strategy_name,
+                        'timestamp': self._generation_timestamp.isoformat(),
                         'grid_x': i,
                         'grid_y': j,
                         'spacing_m': self.config.spacing,
