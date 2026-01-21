@@ -21,12 +21,14 @@ Geoinformatics Engineering graduate students at Politecnico di Milano
 __version__ = "0.1.0"
 __author__ = "Jiale Guo, Mingfeng Tang"
 
+from svipro.sampling.base import SamplingConfig
 from svipro.sampling import SamplingStrategy, GridSampling
 
 __all__ = [
     "__version__",
     "__author__",
     # Sampling
+    "SamplingConfig",
     "SamplingStrategy",
     "GridSampling",
 ]
