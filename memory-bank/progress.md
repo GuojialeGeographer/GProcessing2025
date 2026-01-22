@@ -101,17 +101,53 @@
 - 友好的错误提示
 - ANSI彩色输出增强用户体验
 
+### ✅ 步骤 2.1：实现路网采样（2025-01-22）
+- [x] 创建road_network.py模块（src/svipro/sampling/road_network.py）
+- [x] 实现RoadNetworkSampling类
+- [x] 集成OSMnx从OpenStreetMap获取路网数据
+- [x] 实现沿道路采样点生成算法
+- [x] 添加道路类型过滤功能（支持OSM highway types）
+- [x] 支持不同网络类型（walk, drive, bike, all）
+- [x] 实现calculate_road_network_metrics()方法
+- [x] 添加参数验证和OSM API错误处理
+- [x] 更新__init__.py导出RoadNetworkSampling
+- [x] 编写21个单元测试（tests/test_road_network_sampling.py）
+- [x] 所有测试通过 ✓ (21/21)
+
+**核心功能**:
+- OSMnx集成：自动从OpenStreetMap下载路网数据
+- 路网类型过滤：支持19种OSM highway类型（motorway, primary, secondary等）
+- 网络类型选择：支持all, walk, drive, bike四种网络
+- 沿边采样：在道路边上按间距均匀分布采样点
+- 路网指标计算：边数、节点数、总长度、平均度数等
+
+**测试覆盖**:
+- 初始化测试 (7 tests)
+- 生成功能测试 (7 tests)
+- 指标计算测试 (2 tests)
+- 边界情况测试 (4 tests)
+- 可复现性测试 (1 test)
+
+**代码质量**:
+- 完整的类型提示
+- Google风格docstring
+- 支持可复现性（seed）
+- 边界验证和错误处理
+- OSM API限流处理和缓存
+
 ---
 
 ## 进行中（In Progress）
 
 ### 🔄 当前任务
-**任务**: 第一阶段MVP已完成，准备进入第二阶段
+**任务**: 第二阶段核心功能开发
 
-**状态**: 步骤1.1、1.2、1.3、1.4全部完成
+**状态**: 步骤2.1已完成，准备继续步骤2.2
 
 **下一步**:
-- [ ] 步骤2.1：实现路网采样（核心功能）
+- [ ] 步骤2.2：实现元数据管理（可选）
+- [ ] 步骤2.3：实现质量指标（可选，已部分实现）
+- [ ] 步骤2.4：完善CLI（添加road network命令）
 - [ ] 或等待用户确认
 
 ---

@@ -23,7 +23,7 @@ __version__ = "0.1.0"
 __author__ = "Jiale Guo, Mingfeng Tang"
 
 from svipro.sampling.base import SamplingConfig
-from svipro.sampling import SamplingStrategy, GridSampling
+from svipro.sampling import SamplingStrategy, GridSampling, RoadNetworkSampling
 
 __all__ = [
     "__version__",
@@ -32,4 +32,5 @@ __all__ = [
     "SamplingConfig",
     "SamplingStrategy",
     "GridSampling",
+    "RoadNetworkSampling",
 ]
