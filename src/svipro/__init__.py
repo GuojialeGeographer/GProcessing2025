@@ -25,6 +25,13 @@ __author__ = "Jiale Guo, Mingfeng Tang"
 from svipro.sampling.base import SamplingConfig
 from svipro.sampling import SamplingStrategy, GridSampling, RoadNetworkSampling
 from svipro.visualization import compare_strategies, plot_coverage_statistics, plot_spatial_distribution
+from svipro.metadata import (
+    SamplingMetadata,
+    MetadataSerializer,
+    MetadataValidator,
+    MetadataExporter,
+    quick_validate
+)
 
 __all__ = [
     "__version__",
@@ -38,4 +45,10 @@ __all__ = [
     "compare_strategies",
     "plot_coverage_statistics",
     "plot_spatial_distribution",
+    # Metadata
+    "SamplingMetadata",
+    "MetadataSerializer",
+    "MetadataValidator",
+    "MetadataExporter",
+    "quick_validate",
 ]
