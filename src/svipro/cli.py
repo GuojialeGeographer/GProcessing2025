@@ -22,7 +22,7 @@ from typing import Optional
 import geopandas as gpd
 from shapely.geometry import Polygon
 
-from svipro import GridSampling, SamplingConfig
+from svipro import GridSampling, RoadNetworkSampling, SamplingConfig
 from svipro.sampling.base import SamplingStrategy
 
 
@@ -265,6 +265,177 @@ def grid(spacing: float, crs: str, seed: int, aoi: str, output: str, metadata: b
         sys.exit(1)
     except ValueError as e:
         error_msg(f"Validation error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        error_msg(f"Unexpected error: {e}")
+        sys.exit(1)
+
+
+@sample.command()
+@click.option(
+    '--spacing',
+    type=float,
+    default=100.0,
+    show_default=True,
+    help='Distance between sample points in meters'
+)
+@click.option(
+    '--crs',
+    type=str,
+    default='EPSG:4326',
+    show_default=True,
+    help='Coordinate Reference System (EPSG code)'
+)
+@click.option(
+    '--seed',
+    type=int,
+    default=42,
+    show_default=True,
+    help='Random seed for reproducibility'
+)
+@click.option(
+    '--network-type',
+    type=click.Choice(['all', 'walk', 'drive', 'bike'], case_sensitive=False),
+    default='all',
+    show_default=True,
+    help='OSM network type to download'
+)
+@click.option(
+    '--road-types',
+    type=str,
+    default=None,
+    multiple=True,
+    help='OSM highway types to include (e.g., primary, secondary). Can be specified multiple times.'
+)
+@click.option(
+    '--aoi',
+    type=str,
+    required=True,
+    callback=validate_aoi_file,
+    help='Path to AOI boundary file (GeoJSON format)'
+)
+@click.option(
+    '--output',
+    type=str,
+    required=True,
+    callback=validate_output_path,
+    help='Output file path for sample points (GeoJSON format)'
+)
+@click.option(
+    '--metadata',
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help='Include metadata in output GeoJSON'
+)
+def road_network(
+    spacing: float,
+    crs: str,
+    seed: int,
+    network_type: str,
+    road_types: tuple,
+    aoi: str,
+    output: str,
+    metadata: bool
+):
+    """
+    Generate road network sample points within the given boundary.
+
+    Downloads road network data from OpenStreetMap and places sample points
+    along road edges at approximately the specified spacing distance.
+
+    Example:
+        $ svipro sample road-network --spacing 100 --aoi boundary.geojson --output points.geojson
+
+    \b
+    Advanced usage:
+        $ svipro sample road-network --spacing 50 --network-type drive --road-types primary --road-types secondary --aoi hk.geojson --output hk_points.geojson
+
+    \f
+    This command is particularly useful for street view imagery studies where
+    access to roads is required for image capture. Points are distributed along
+    actual road networks, providing realistic placement for field surveys.
+    """
+    try:
+        info_msg(f"Loading AOI from: {aoi}")
+
+        # Read AOI
+        aoi_gdf = gpd.read_file(aoi)
+
+        # Extract boundary
+        if len(aoi_gdf) == 1:
+            boundary = aoi_gdf.geometry.iloc[0]
+        else:
+            boundary = aoi_gdf.unary_union_all()
+
+        if not isinstance(boundary, Polygon):
+            boundary = boundary.convex_hull
+
+        info_msg(f"Boundary area: {boundary.area:.2f} square degrees")
+
+        # Process road types if provided
+        road_types_set = None
+        if road_types:
+            road_types_set = set(road_types)
+            info_msg(f"Filtering by road types: {', '.join(road_types)}")
+
+        # Create configuration
+        config = SamplingConfig(
+            spacing=spacing,
+            crs=crs,
+            seed=seed
+        )
+
+        # Create strategy and generate points
+        info_msg(f"Downloading road network (type: {network_type})...")
+        info_msg(f"Generating road network sample points with {spacing}m spacing...")
+        strategy = RoadNetworkSampling(
+            config,
+            network_type=network_type,
+            road_types=road_types_set
+        )
+
+        points = strategy.generate(boundary)
+
+        if len(points) == 0:
+            warning_msg("No sample points generated. "
+                        "Check if boundary has road network or try different network type.")
+            return
+
+        success_msg(f"Generated {len(points)} sample points")
+
+        # Calculate and display metrics
+        metrics = strategy.calculate_road_network_metrics()
+        info_msg(f"Total road length: {metrics['total_road_length_km']:.2f} km")
+        info_msg(f"Network edges: {metrics['n_edges']}, nodes: {metrics['n_nodes']}")
+
+        if metrics['road_type_distribution']:
+            info_msg("Road type distribution:")
+            for road_type, count in sorted(metrics['road_type_distribution'].items()):
+                click.echo(f"  - {road_type}: {count} points")
+
+        # Export to GeoJSON
+        info_msg(f"Exporting to: {output}")
+        strategy.to_geojson(output, include_metadata=metadata)
+
+        success_msg(f"Sample points saved to: {output}")
+
+    except FileNotFoundError as e:
+        error_msg(f"File not found: {e}")
+        sys.exit(1)
+    except ValueError as e:
+        error_msg(f"Validation error: {e}")
+        sys.exit(1)
+    except RuntimeError as e:
+        if "Failed to download road network" in str(e):
+            error_msg("Failed to download road network from OpenStreetMap")
+            error_msg("Please check:")
+            error_msg("  - You have an internet connection")
+            error_msg("  - The boundary covers a valid area with roads")
+            error_msg("  - OSM servers are accessible")
+            info_msg("Tip: Large boundaries may take time to download")
+        else:
+            error_msg(f"Runtime error: {e}")
         sys.exit(1)
     except Exception as e:
         error_msg(f"Unexpected error: {e}")

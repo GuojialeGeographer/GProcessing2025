@@ -133,7 +133,42 @@
 - Google风格docstring
 - 支持可复现性（seed）
 - 边界验证和错误处理
-- OSM API限流处理和缓存
+### ✅ 步骤 2.4：完善CLI（2025-01-22）
+- [x] 添加svipro sample road-network命令
+- [x] 实现network-type参数（all, walk, drive, bike）
+- [x] 实现road-types参数（支持多个OSM highway类型）
+- [x] 添加路网采样专用错误提示
+- [x] 显示路网类型分布统计
+- [x] 更新CLI文档和帮助信息
+- [x] 测试CLI命令功能
+
+**新增CLI命令**:
+```bash
+# 基本路网采样
+svipro sample road-network --spacing 100 --aoi boundary.geojson --output points.geojson
+
+# 高级用法：指定网络类型和道路类型
+svipro sample road-network \
+  --spacing 50 \
+  --network-type drive \
+  --road-types primary \
+  --road-types secondary \
+  --aoi hk.geojson \
+  --output hk_points.geojson
+```
+
+**功能特性**:
+- 网络类型选择：all, walk, drive, bike
+- 道路类型过滤：支持19种OSM highway类型
+- 路网统计显示：总长度、边数、节点数、道路类型分布
+- 友好的错误提示：网络下载失败、边界无效等
+- 与grid命令一致的参数风格
+
+**测试结果**:
+- ✓ CLI命令正确注册
+- ✓ 帮助文档完整显示
+- ✓ 参数验证正常工作
+- ✓ 错误处理清晰明确
 
 ---
 
@@ -142,12 +177,19 @@
 ### 🔄 当前任务
 **任务**: 第二阶段核心功能开发
 
-**状态**: 步骤2.1已完成，准备继续步骤2.2
+**状态**: 步骤2.1和2.4已完成，核心功能实现完毕
 
-**下一步**:
+**已完成的核心功能**:
+- ✅ 网格采样（GridSampling）+ CLI命令
+- ✅ 路网采样（RoadNetworkSampling）+ CLI命令
+- ✅ 覆盖指标计算
+- ✅ GeoJSON导出
+- ✅ 质量评估工具
+
+**下一步建议**:
 - [ ] 步骤2.2：实现元数据管理（可选）
-- [ ] 步骤2.3：实现质量指标（可选，已部分实现）
-- [ ] 步骤2.4：完善CLI（添加road network命令）
+- [ ] 步骤3.1：实现可视化工具（交互式地图）
+- [ ] 步骤4.1：完善单元测试覆盖率
 - [ ] 或等待用户确认
 
 ---
