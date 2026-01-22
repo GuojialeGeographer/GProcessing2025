@@ -32,6 +32,13 @@ from svipro.metadata import (
     MetadataExporter,
     quick_validate
 )
+from svipro.performance import (
+    ParallelProcessor,
+    SpatialChunker,
+    DiskCache,
+    ProgressTracker,
+    TQDM_AVAILABLE
+)
 
 __all__ = [
     "__version__",
@@ -51,4 +58,10 @@ __all__ = [
     "MetadataValidator",
     "MetadataExporter",
     "quick_validate",
+    # Performance
+    "ParallelProcessor",
+    "SpatialChunker",
+    "DiskCache",
+    "ProgressTracker",
+    "TQDM_AVAILABLE",
 ]
