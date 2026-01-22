@@ -24,6 +24,7 @@ __author__ = "Jiale Guo, Mingfeng Tang"
 
 from svipro.sampling.base import SamplingConfig
 from svipro.sampling import SamplingStrategy, GridSampling, RoadNetworkSampling
+from svipro.visualization import compare_strategies, plot_coverage_statistics, plot_spatial_distribution
 
 __all__ = [
     "__version__",
@@ -33,4 +34,8 @@ __all__ = [
     "SamplingStrategy",
     "GridSampling",
     "RoadNetworkSampling",
+    # Visualization
+    "compare_strategies",
+    "plot_coverage_statistics",
+    "plot_spatial_distribution",
 ]

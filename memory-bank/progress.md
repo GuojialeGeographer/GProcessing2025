@@ -170,26 +170,83 @@ svipro sample road-network \
 - ✓ 参数验证正常工作
 - ✓ 错误处理清晰明确
 
+### ✅ 步骤 3.1：实现可视化工具（2025-01-22）
+- [x] 创建visualization模块（src/svipro/visualization/）
+- [x] 实现compare_strategies()策略对比功能
+- [x] 实现plot_coverage_statistics()统计图表
+- [x] 实现plot_spatial_distribution()空间分布图
+- [x] 添加svipro visualize statistics命令
+- [x] 添加svipro visualize compare命令
+- [x] 集成matplotlib和seaborn可视化
+
+**核心功能**:
+- 策略对比可视化：在同一地图上显示不同采样策略
+- 覆盖统计图表：空间分布热图、最近邻距离、象限分析
+- 多面板图：空间分布、指标对比、密度分析
+- 高质量输出：300 DPI，可自定义图表尺寸
+
+**CLI命令**:
+```bash
+# 统计图表
+svipro visualize statistics --points samples.geojson --output stats.png
+
+# 策略对比（仅网格）
+svipro visualize compare --aoi boundary.geojson --output comparison.png
+
+# 策略对比（包含路网）
+svipro visualize compare \
+  --grid-spacing 50 \
+  --road-spacing 100 \
+  --include-road \
+  --network-type drive \
+  --aoi hk.geojson \
+  --output hk_comparison.png
+```
+
+**可视化功能**:
+1. **compare_strategies()**: 多策略对比
+   - 空间分布对比图
+   - 覆盖指标条形图
+   - 采样密度分析
+
+2. **plot_coverage_statistics()**: 覆盖统计分析
+   - 2D空间分布热图
+   - 最近邻距离直方图
+   - 象限分析（4象限点数分布）
+   - 统计摘要表
+
+3. **plot_spatial_distribution()**: 空间分布图
+   - 密度着色点图
+   - 边界叠加显示
+   - 点数统计标注
+
+**技术特性**:
+- 使用seaborn风格美化图表
+- 支持高分辨率输出（300 DPI）
+- 自动图例和颜色映射
+- 灵活的图表尺寸配置
+
 ---
 
 ## 进行中（In Progress）
 
 ### 🔄 当前任务
-**任务**: 第二阶段核心功能开发
+**任务**: 第三阶段可视化开发
 
-**状态**: 步骤2.1和2.4已完成，核心功能实现完毕
+**状态**: 步骤3.1已完成，可视化工具实现完毕
 
-**已完成的核心功能**:
-- ✅ 网格采样（GridSampling）+ CLI命令
-- ✅ 路网采样（RoadNetworkSampling）+ CLI命令
-- ✅ 覆盖指标计算
-- ✅ GeoJSON导出
-- ✅ 质量评估工具
+**已完成功能**:
+- ✅ 采样策略（网格 + 路网）
+- ✅ CLI命令（sample, quality, visualize）
+- ✅ 可视化工具（策略对比、统计图表）
+- ✅ 交互式地图（Folium）
+- ✅ 静态图表（matplotlib + seaborn）
 
 **下一步建议**:
 - [ ] 步骤2.2：实现元数据管理（可选）
-- [ ] 步骤3.1：实现可视化工具（交互式地图）
-- [ ] 步骤4.1：完善单元测试覆盖率
+- [ ] 步骤4.1：完善单元测试覆盖率（目标>80%）
+- [ ] 步骤4.3：完善文档（API文档、教程）
+- [ ] 步骤4.4：创建案例研究
 - [ ] 或等待用户确认
 
 ---

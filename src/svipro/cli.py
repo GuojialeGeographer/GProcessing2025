@@ -750,6 +750,196 @@ def points_map(points: str, output: str, title: str):
         sys.exit(1)
 
 
+@visualize.command()
+@click.option(
+    '--points',
+    type=str,
+    required=True,
+    callback=validate_aoi_file,
+    help='Path to sample points GeoJSON file'
+)
+@click.option(
+    '--output',
+    type=str,
+    default='coverage_statistics.png',
+    show_default=True,
+    help='Output PNG file path for the statistics plot'
+)
+@click.option(
+    '--boundary',
+    type=str,
+    default=None,
+    help='Optional boundary file (GeoJSON) for context'
+)
+def statistics(points: str, output: str, boundary: str):
+    """
+    Generate coverage statistics plots for sample points.
+
+    Creates a comprehensive visualization showing:
+    - Spatial distribution heatmap
+    - Nearest neighbor distances histogram
+    - Quadrant analysis
+    - Summary statistics table
+
+    Example:
+        $ svipro visualize statistics --points samples.geojson --output stats.png
+        $ svipro visualize statistics --points samples.geojson --boundary aoi.geojson --output stats.png
+    """
+    try:
+        from svipro import plot_coverage_statistics
+
+        info_msg(f"Loading sample points from: {points}")
+
+        # Read sample points
+        points_gdf = gpd.read_file(points)
+
+        if len(points_gdf) == 0:
+            error_msg("Sample points file is empty")
+            sys.exit(1)
+
+        info_msg(f"Analyzing {len(points_gdf)} sample points...")
+
+        # Generate statistics plot
+        info_msg("Generating coverage statistics visualization...")
+        fig = plot_coverage_statistics(points_gdf, output_path=output)
+
+        success_msg(f"Statistics plot saved to: {output}")
+
+    except FileNotFoundError as e:
+        error_msg(f"File not found: {e}")
+        sys.exit(1)
+    except ValueError as e:
+        error_msg(f"Validation error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        error_msg(f"Error generating statistics: {e}")
+        sys.exit(1)
+
+
+@visualize.command()
+@click.option(
+    '--grid-spacing',
+    type=float,
+    default=100.0,
+    show_default=True,
+    help='Spacing for grid sampling (meters)'
+)
+@click.option(
+    '--road-spacing',
+    type=float,
+    default=100.0,
+    show_default=True,
+    help='Spacing for road network sampling (meters)'
+)
+@click.option(
+    '--network-type',
+    type=click.Choice(['all', 'walk', 'drive', 'bike'], case_sensitive=False),
+    default='all',
+    show_default=True,
+    help='OSM network type for road sampling'
+)
+@click.option(
+    '--aoi',
+    type=str,
+    required=True,
+    callback=validate_aoi_file,
+    help='Path to AOI boundary file (GeoJSON format)'
+)
+@click.option(
+    '--output',
+    type=str,
+    default='strategy_comparison.png',
+    show_default=True,
+    help='Output PNG file path for the comparison plot'
+)
+@click.option(
+    '--include-road',
+    is_flag=True,
+    default=False,
+    show_default=True,
+    help='Include road network sampling in comparison (requires internet)'
+)
+def compare(
+    grid_spacing: float,
+    road_spacing: float,
+    network_type: str,
+    aoi: str,
+    output: str,
+    include_road: bool
+):
+    """
+    Compare multiple sampling strategies on the same boundary.
+
+    Generates a multi-panel figure showing:
+    - Spatial distribution comparison
+    - Coverage metrics bar chart
+    - Sampling density analysis
+
+    Example:
+        $ svipro visualize compare --aoi boundary.geojson --output comparison.png
+        $ svipro visualize compare --grid-spacing 50 --road-spacing 100 --include-road --aoi hk.geojson --output hk_comparison.png
+    """
+    try:
+        from svipro import compare_strategies, GridSampling, RoadNetworkSampling, SamplingConfig
+
+        info_msg(f"Loading AOI from: {aoi}")
+
+        # Read AOI
+        aoi_gdf = gpd.read_file(aoi)
+
+        # Extract boundary
+        if len(aoi_gdf) == 1:
+            boundary = aoi_gdf.geometry.iloc[0]
+        else:
+            boundary = aoi_gdf.unary_union_all()
+
+        if not isinstance(boundary, Polygon):
+            boundary = boundary.convex_hull
+
+        info_msg(f"Boundary area: {boundary.area:.2f} square degrees")
+
+        # Create strategies
+        strategies = {
+            f'Grid ({grid_spacing}m)': GridSampling(
+                SamplingConfig(spacing=grid_spacing)
+            ),
+            f'Grid ({road_spacing}m)': GridSampling(
+                SamplingConfig(spacing=road_spacing)
+            )
+        }
+
+        # Optionally add road network sampling
+        if include_road:
+            info_msg(f"Including road network sampling (type: {network_type})...")
+            strategies[f'Road Network ({road_spacing}m)'] = RoadNetworkSampling(
+                SamplingConfig(spacing=road_spacing),
+                network_type=network_type
+            )
+
+        # Generate comparison
+        info_msg("Generating strategy comparison...")
+        fig = compare_strategies(strategies, boundary, output_path=output)
+
+        success_msg(f"Comparison plot saved to: {output}")
+
+    except FileNotFoundError as e:
+        error_msg(f"File not found: {e}")
+        sys.exit(1)
+    except ValueError as e:
+        error_msg(f"Validation error: {e}")
+        sys.exit(1)
+    except RuntimeError as e:
+        if "Failed to download road network" in str(e):
+            error_msg("Failed to download road network for comparison")
+            info_msg("Tip: Use --no-include-road flag to skip road network sampling")
+        else:
+            error_msg(f"Runtime error: {e}")
+        sys.exit(1)
+    except Exception as e:
+        error_msg(f"Error generating comparison: {e}")
+        sys.exit(1)
+
+
 def main():
     """Entry point for the CLI when run as a script."""
     cli()
