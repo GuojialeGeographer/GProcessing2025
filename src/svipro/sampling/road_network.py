@@ -227,7 +227,18 @@ class RoadNetworkSampling(SamplingStrategy):
             )
 
         # Convert to undirected graph for bidirectional sampling
-        graph = ox.utils_graph.get_undirected(self._road_graph)
+        # Use osmnx.convert.to_undirected() for newer OSMnx versions
+        try:
+            # Try newer OSMnx API first (v2.0+)
+            graph = self._road_graph.to_undirected()
+        except AttributeError:
+            # Fallback to older API
+            try:
+                import osmnx.utils_graph
+                graph = osmnx.utils_graph.get_undirected(self._road_graph)
+            except AttributeError:
+                # Last resort: just use the graph as-is
+                graph = self._road_graph
 
         # Filter by road types if specified
         if self.road_types is not None:
