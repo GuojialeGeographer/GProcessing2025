@@ -6,9 +6,12 @@ enabling users to perform spatial sampling operations directly from the terminal
 
 Available Commands:
     - svipro sample grid: Grid-based sampling
+    - svipro sample road-network: Road network sampling
     - svipro protocol create: Generate sampling protocol
     - svipro quality metrics: Calculate coverage metrics
-    - svipro visualize points: Visualize sample points
+    - svipro visualize points-map: Visualize sample points
+    - svipro visualize statistics: Coverage statistics plots
+    - svipro visualize compare: Compare sampling strategies
 
 Example:
     $ svipro sample grid --spacing 100 --aoi boundary.geojson --output points.geojson
@@ -16,14 +19,20 @@ Example:
 
 import click
 import sys
+import traceback
 from pathlib import Path
 from typing import Optional
 
 import geopandas as gpd
 from shapely.geometry import Polygon
 
-from svipro import GridSampling, RoadNetworkSampling, SamplingConfig
-from svipro.sampling.base import SamplingStrategy
+from svipro import (
+    GridSampling, RoadNetworkSampling, SamplingConfig,
+    SVIProError, ConfigurationError, BoundaryError,
+    SamplingError, NetworkDownloadError, ValidationError,
+    ExportError, format_error_context, suggest_fix,
+    check_spacing_bounds, estimate_processing_time, warn_large_output
+)
 
 
 # ANSI color codes for terminal output
@@ -33,7 +42,7 @@ class Colors:
     OKBLUE = '\033[94m'  # bright blue
     OKCYAN = '\033[96m'  # bright cyan
     OKGREEN = '\033[92m'  # bright green
-    WARNING = '\3[93m'  # bright yellow
+    WARNING = '\033[93m'  # bright yellow  # Fixed: was \3
     FAIL = '\033[91m'   # bright red
     ENDC = '\033[0m'    # end color
     BOLD = '\033[1m'     # bold
@@ -45,9 +54,13 @@ def success_msg(message: str) -> None:
     click.echo(f"{Colors.OKGREEN}✓{Colors.ENDC} {message}")
 
 
-def error_msg(message: str) -> None:
-    """Print error message in red."""
+def error_msg(message: str, details: Optional[dict] = None) -> None:
+    """Print error message in red with optional details."""
     click.echo(f"{Colors.FAIL}✗{Colors.ENDC} {message}", err=True)
+    if details:
+        click.echo(f"{Colors.WARNING}  Details:{Colors.ENDC}", err=True)
+        for key, value in details.items():
+            click.echo(f"    {key}: {value}", err=True)
 
 
 def info_msg(message: str) -> None:
@@ -58,6 +71,67 @@ def info_msg(message: str) -> None:
 def warning_msg(message: str) -> None:
     """Print warning message in yellow."""
     click.echo(f"{Colors.WARNING}⚠{Colors.ENDC} {message}")
+
+
+def tip_msg(message: str) -> None:
+    """Print tip message in cyan."""
+    click.echo(f"{Colors.OKCYAN}💡{Colors.ENDC} {message}")
+
+
+def handle_svipro_error(error: SVIProError) -> None:
+    """
+    Handle SVIPro-specific errors with helpful messages.
+
+    Args:
+        error: The SVIPro exception to handle
+    """
+    error_msg(str(error))
+
+    # Show details if available
+    if error.details:
+        for key, value in error.details.items():
+            click.echo(f"  {Colors.WARNING}•{Colors.ENDC} {key}: {value}", err=True)
+
+    # Show suggestion if available
+    suggestion = suggest_fix(error)
+    if suggestion:
+        tip_msg(suggestion)
+
+    sys.exit(1)
+
+
+def handle_unexpected_error(error: Exception) -> None:
+    """
+    Handle unexpected errors with debugging information.
+
+    Args:
+        error: The unexpected exception
+    """
+    error_msg(f"An unexpected error occurred: {error}")
+
+    # Show error type
+    click.echo(f"\n{Colors.WARNING}Error type:{Colors.ENDC} {error.__class__.__name__}", err=True)
+
+    # Check if it might be related to SVIPro
+    if isinstance(error, (ValueError, TypeError, AttributeError)):
+        tip_msg(
+            "This might be a configuration or input error. "
+            "Please check your parameters and try again."
+        )
+
+    # Suggest reporting bug if unexpected
+    click.echo(
+        f"\n{Colors.FAIL}If this error persists, please report it at:{Colors.ENDC}\n"
+        f"  https://github.com/GuojialeGeographer/GProcessing2025/issues",
+        err=True
+    )
+
+    # Show traceback in verbose mode
+    if '--verbose' in sys.argv or '-v' in sys.argv:
+        click.echo(f"\n{Colors.WARNING}Stack trace:{Colors.ENDC}", err=True)
+        traceback.print_exc()
+
+    sys.exit(1)
 
 
 def validate_aoi_file(ctx, param, value: str) -> str:
@@ -213,6 +287,9 @@ def grid(spacing: float, crs: str, seed: int, aoi: str, output: str, metadata: b
     try:
         info_msg(f"Loading AOI from: {aoi}")
 
+        # Validate spacing parameter
+        check_spacing_bounds(spacing)
+
         # Read AOI
         aoi_gdf = gpd.read_file(aoi)
 
@@ -245,9 +322,13 @@ def grid(spacing: float, crs: str, seed: int, aoi: str, output: str, metadata: b
         if len(points) == 0:
             warning_msg("No sample points generated. "
                         "Check if boundary is large enough for the spacing.")
+            tip_msg("Try reducing the spacing value or using a larger boundary.")
             return
 
         success_msg(f"Generated {len(points)} sample points")
+
+        # Warn if generating very large output
+        warn_large_output(len(points))
 
         # Calculate and display metrics
         metrics = strategy.calculate_coverage_metrics()
@@ -260,15 +341,10 @@ def grid(spacing: float, crs: str, seed: int, aoi: str, output: str, metadata: b
 
         success_msg(f"Sample points saved to: {output}")
 
-    except FileNotFoundError as e:
-        error_msg(f"File not found: {e}")
-        sys.exit(1)
-    except ValueError as e:
-        error_msg(f"Validation error: {e}")
-        sys.exit(1)
+    except SVIProError as e:
+        handle_svipro_error(e)
     except Exception as e:
-        error_msg(f"Unexpected error: {e}")
-        sys.exit(1)
+        handle_unexpected_error(e)
 
 
 @sample.command()
@@ -359,6 +435,9 @@ def road_network(
     try:
         info_msg(f"Loading AOI from: {aoi}")
 
+        # Validate spacing parameter
+        check_spacing_bounds(spacing)
+
         # Read AOI
         aoi_gdf = gpd.read_file(aoi)
 
@@ -388,7 +467,7 @@ def road_network(
 
         # Create strategy and generate points
         info_msg(f"Downloading road network (type: {network_type})...")
-        info_msg(f"Generating road network sample points with {spacing}m spacing...")
+        info_msg("This may take a moment for large areas...")
         strategy = RoadNetworkSampling(
             config,
             network_type=network_type,
@@ -400,9 +479,16 @@ def road_network(
         if len(points) == 0:
             warning_msg("No sample points generated. "
                         "Check if boundary has road network or try different network type.")
+            tip_msg(
+                "Try: (1) Using a larger boundary, (2) Different network_type "
+                "('drive', 'walk', 'bike'), or (3) Removing road type filters"
+            )
             return
 
         success_msg(f"Generated {len(points)} sample points")
+
+        # Warn if generating very large output
+        warn_large_output(len(points))
 
         # Calculate and display metrics
         metrics = strategy.calculate_road_network_metrics()
@@ -420,26 +506,10 @@ def road_network(
 
         success_msg(f"Sample points saved to: {output}")
 
-    except FileNotFoundError as e:
-        error_msg(f"File not found: {e}")
-        sys.exit(1)
-    except ValueError as e:
-        error_msg(f"Validation error: {e}")
-        sys.exit(1)
-    except RuntimeError as e:
-        if "Failed to download road network" in str(e):
-            error_msg("Failed to download road network from OpenStreetMap")
-            error_msg("Please check:")
-            error_msg("  - You have an internet connection")
-            error_msg("  - The boundary covers a valid area with roads")
-            error_msg("  - OSM servers are accessible")
-            info_msg("Tip: Large boundaries may take time to download")
-        else:
-            error_msg(f"Runtime error: {e}")
-        sys.exit(1)
+    except SVIProError as e:
+        handle_svipro_error(e)
     except Exception as e:
-        error_msg(f"Unexpected error: {e}")
-        sys.exit(1)
+        handle_unexpected_error(e)
 
 
 @cli.group()

@@ -39,6 +39,29 @@ from svipro.performance import (
     ProgressTracker,
     TQDM_AVAILABLE
 )
+from svipro.exceptions import (
+    SVIProError,
+    ConfigurationError,
+    BoundaryError,
+    SamplingError,
+    NetworkDownloadError,
+    ValidationError,
+    ExportError,
+    VisualizationError,
+    format_error_context,
+    suggest_fix
+)
+from svipro.utils import (
+    handle_small_boundary,
+    fix_invalid_geometry,
+    ensure_polygon,
+    validate_crs_compatibility,
+    handle_empty_geodataframe,
+    warn_large_output,
+    estimate_processing_time,
+    check_spacing_bounds,
+    safe_geometry_operation
+)
 
 __all__ = [
     "__version__",
@@ -64,4 +87,25 @@ __all__ = [
     "DiskCache",
     "ProgressTracker",
     "TQDM_AVAILABLE",
+    # Exceptions
+    "SVIProError",
+    "ConfigurationError",
+    "BoundaryError",
+    "SamplingError",
+    "NetworkDownloadError",
+    "ValidationError",
+    "ExportError",
+    "VisualizationError",
+    "format_error_context",
+    "suggest_fix",
+    # Utils
+    "handle_small_boundary",
+    "fix_invalid_geometry",
+    "ensure_polygon",
+    "validate_crs_compatibility",
+    "handle_empty_geodataframe",
+    "warn_large_output",
+    "estimate_processing_time",
+    "check_spacing_bounds",
+    "safe_geometry_operation",
 ]
