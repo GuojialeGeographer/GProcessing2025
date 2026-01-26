@@ -54,3 +54,11 @@ site/
 # Project specific
 Python-Project-Template-master/
 vibecoding.md
+cache/
+examples/cache/
+
+# Temporary scripts and files
+fix_author.sh
+test_notebook_fixes.py
+test_quick_fixes.py
+Untitled.ipynb

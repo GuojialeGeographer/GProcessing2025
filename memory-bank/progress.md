@@ -1,7 +1,7 @@
 # SpatialSamplingPro 开发进度（Progress）
 
 **项目启动**: 2025-01-21
-**最后更新**: 2025-01-25
+**最后更新**: 2025-01-24
 
 ---
 
@@ -347,9 +347,9 @@ docs/
    - 实现三层回退：新API → 旧API → 原图
 
 **修改的文件**:
-- `examples/intro_to_ssp.ipynb`: 修复cell-5, cell-7, cell-8, cell-11, cell-13, cell-19
+- `examples/intro_to_svipro.ipynb`: 修复cell-5, cell-7, cell-8, cell-11, cell-13, cell-19
 - `examples/advanced_sampling_comparison.ipynb`: 更新边界和间距参数
-- `src/ssp/sampling/road_network.py`: 添加OSMnx v2.0+兼容性（lines 229-241）
+- `src/svipro/sampling/road_network.py`: 添加OSMnx v2.0+兼容性（lines 229-241）
 
 **测试结果**:
 - ✅ 171/174单元测试通过（3个失败与修复无关）
