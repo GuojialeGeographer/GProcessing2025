@@ -1,6 +1,6 @@
-# SVIPro - AI开发规则配置
+# SpatialSamplingPro - AI开发规则配置
 
-**项目**: SVIPro - Street View Imagery Research Protocol & Optimization
+**项目**: SpatialSamplingPro - Spatial Sampling Design & Protocol Optimization
 **开发者**: Jiale Guo & Mingfeng Tang
 **课程**: Geospatial Processing, Politecnico di Milano
 

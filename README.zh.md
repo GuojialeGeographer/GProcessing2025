@@ -36,6 +36,8 @@ SpatialSamplingPro 解决了城市研究中的一个关键方法学缺口：**�
 
 米兰理工大学地理信息工程专业研究生
 
+> **详细贡献说明请参阅 [CONTRIBUTORS.md](CONTRIBUTORS.md)**
+
 ---
 
 ## 🚀 快速开始

@@ -36,6 +36,8 @@ A **scientific, reproducible, and documented** spatial sampling design framework
 
 Geoinformatics Engineering graduate students at Politecnico di Milano
 
+> **For detailed contribution breakdown, see [CONTRIBUTORS.md](CONTRIBUTORS.md)**
+
 ---
 
 ## 🚀 Quick Start
