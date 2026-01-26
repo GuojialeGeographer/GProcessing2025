@@ -26,6 +26,7 @@ import networkx as nx
 from shapely.geometry import Point, Polygon
 import osmnx as ox
 import warnings
+from tqdm import tqdm
 
 from ssp.sampling.base import SamplingStrategy, SamplingConfig
 
@@ -315,6 +316,14 @@ class RoadNetworkSampling(SamplingStrategy):
         points = []
         points_generated = 0
 
+        # Progress bar for edge processing
+        pbar = tqdm(
+            total=len(edges_gdf),
+            desc="Processing road edges",
+            unit="edges",
+            disable=None  # Auto-detect if in terminal
+        )
+
         for idx, row in edges_gdf.iterrows():
             # Handle both MultiIndex (u, v, key) and simple index
             if isinstance(idx, tuple) and len(idx) >= 2:
@@ -373,8 +382,15 @@ class RoadNetworkSampling(SamplingStrategy):
 
                 points_generated += 1
 
+            # Update progress bar
+            pbar.update(1)
+            pbar.set_postfix({'points': points_generated})
+
             if points_generated >= n_points_target:
                 break
+
+        # Close progress bar
+        pbar.close()
 
         # Check if any points were generated
         if not points:

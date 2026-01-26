@@ -24,6 +24,7 @@ from typing import Optional, Tuple
 import numpy as np
 import geopandas as gpd
 from shapely.geometry import Point, Polygon
+from tqdm import tqdm
 
 from ssp.sampling.base import SamplingStrategy, SamplingConfig
 from ssp.utils.coordinates import convert_spacing_for_crs
@@ -147,6 +148,15 @@ class GridSampling(SamplingStrategy):
         points = []
         total_potential = len(x_coords) * len(y_coords)
 
+        # Show progress for large grids
+        show_progress = total_potential > 10000
+        pbar = tqdm(
+            total=len(x_coords),
+            desc="Generating grid",
+            unit="rows",
+            disable=not show_progress
+        ) if show_progress else None
+
         # Generate grid points
         for i, x in enumerate(x_coords):
             for j, y in enumerate(y_coords):
@@ -164,6 +174,15 @@ class GridSampling(SamplingStrategy):
                         'grid_y': j,
                         'spacing_m': self.config.spacing,
                     })
+
+            # Update progress bar
+            if pbar:
+                pbar.update(1)
+                pbar.set_postfix({'points': len(points)})
+
+        # Close progress bar
+        if pbar:
+            pbar.close()
 
         # Create GeoDataFrame
         if points:
