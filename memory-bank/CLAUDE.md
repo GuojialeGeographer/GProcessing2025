@@ -189,12 +189,12 @@ src/svipro/
 
 ```python
 # 推荐：
-from svipro import GridSampling, MetadataManager
-from svipro.sampling import SamplingStrategy
+from ssp import GridSampling, MetadataManager
+from ssp.sampling import SamplingStrategy
 
 # 避免：
-from svipro.sampling.base import SamplingStrategy  # 太长
-from svipro.sampling.base import *  # 不明确
+from ssp.sampling.base import SamplingStrategy  # 太长
+from ssp.sampling.base import *  # 不明确
 ```
 
 ### 依赖方向
@@ -257,7 +257,7 @@ def calculate_metrics(points: gpd.GeoDataFrame) -> dict:
 
 ### 使用方法
 \```python
-from svipro import FeatureClass
+from ssp import FeatureClass
 
 instance = FeatureClass(param1, param2)
 result = instance.method()
@@ -285,7 +285,7 @@ result = instance.method()
 # tests/test_sampling.py
 import pytest
 from shapely.geometry import box
-from svipro import GridSampling
+from ssp import GridSampling
 
 class TestGridSampling:
     """Test suite for GridSampling class."""
