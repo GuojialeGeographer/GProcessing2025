@@ -12,7 +12,7 @@ from shapely.geometry.base import BaseGeometry
 import geopandas as gpd
 import numpy as np
 
-from svipro.utils.edge_cases import (
+from ssp.utils.edge_cases import (
     handle_small_boundary,
     fix_invalid_geometry,
     ensure_polygon,
@@ -23,7 +23,7 @@ from svipro.utils.edge_cases import (
     check_spacing_bounds,
     safe_geometry_operation
 )
-from svipro.exceptions import BoundaryError, ConfigurationError, ValidationError
+from ssp.exceptions import BoundaryError, ConfigurationError, ValidationError
 
 
 class TestHandleSmallBoundary:

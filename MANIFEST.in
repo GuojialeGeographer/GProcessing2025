@@ -4,7 +4,7 @@ include LICENSE
 include CHANGELOG.md
 include pyproject.toml
 
-recursive-include src/svipro *.py
+recursive-include src/ssp *.py
 recursive-include docs *.md *.png *.jpg
 recursive-include examples *.py *.md *.geojson *.yaml
 
@@ -14,4 +14,4 @@ recursive-exclude .git *
 recursive-exclude __pycache__ *
 recursive-exclude *.py[cod]
 recursive-exclude .pytest_cache *
-recursive-exclude .svipro_cache *
+recursive-exclude .ssp_cache *

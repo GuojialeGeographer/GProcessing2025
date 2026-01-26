@@ -1,4 +1,4 @@
-# SVIPro 实施计划（Implementation Plan）
+# SpatialSamplingPro 实施计划（Implementation Plan）
 
 **原则**: 小步快跑，每步必测
 
@@ -10,7 +10,7 @@
 **目标**: 创建可扩展的采样策略基类
 
 **任务**:
-- [ ] 完善 `src/svipro/sampling/base.py`
+- [ ] 完善 `src/ssp/sampling/base.py`
   - 添加完整的类型提示
   - 实现所有抽象方法
   - 添加详细的docstring
@@ -29,7 +29,7 @@
 **目标**: 实现规则网格采样算法
 
 **任务**:
-- [ ] 完善 `src/svipro/sampling/grid.py`
+- [ ] 完善 `src/ssp/sampling/grid.py`
   - 实现2D网格生成算法
   - 处理边界内点过滤
   - 添加坐标系转换支持
@@ -68,9 +68,9 @@
 **目标**: 提供简单的CLI进行网格采样
 
 **任务**:
-- [ ] 创建 `src/svipro/cli.py`
+- [ ] 创建 `src/ssp/cli.py`
   - 使用click创建命令组
-  - 实现`svipro sample grid`命令
+  - 实现`ssp sample grid`命令
   - 添加--spacing, --aoi, --output参数
 
 **验证**:
@@ -88,7 +88,7 @@
 **目标**: 基于OSM路网进行采样
 
 **任务**:
-- [ ] 创建 `src/svipro/sampling/road_network.py`
+- [ ] 创建 `src/ssp/sampling/road_network.py`
   - 使用osmnx获取路网数据
   - 沿道路边进行采样
   - 处理不同网络类型（drive, walk, bike）
@@ -108,7 +108,7 @@
 **目标**: 记录和导出采样协议
 
 **任务**:
-- [ ] 创建 `src/svipro/metadata/protocol.py`
+- [ ] 创建 `src/ssp/metadata/protocol.py`
   - 实现MetadataManager类
   - 记录采样参数和版本信息
   - 导出YAML格式的协议文件
@@ -146,9 +146,9 @@
 
 **任务**:
 - [ ] 在cli.py中添加新命令
-  - `svipro protocol create` - 生成协议文件
-  - `svipro protocol validate` - 验证协议
-  - `svipro quality metrics` - 计算质量指标
+  - `ssp protocol create` - 生成协议文件
+  - `ssp protocol validate` - 验证协议
+  - `ssp quality metrics` - 计算质量指标
 
 **验证**:
 - 测试所有CLI命令
@@ -165,7 +165,7 @@
 **目标**: 使用folium可视化采样点
 
 **任务**:
-- [ ] 创建 `src/svipro/visualization/maps.py`
+- [ ] 创建 `src/ssp/visualization/maps.py`
   - 实现SamplingVisualizer类
   - 创建folium地图
   - 添加采样点标记
@@ -186,7 +186,7 @@
 **目标**: 可视化对比不同采样策略
 
 **任务**:
-- [ ] 创建 `src/svipro/visualization/comparison.py`
+- [ ] 创建 `src/ssp/visualization/comparison.py`
   - 实现compare_strategies()函数
   - 创建多子图地图
   - 添加图例和统计信息
@@ -206,8 +206,8 @@
 
 **任务**:
 - [ ] 在cli.py中添加visualize命令
-  - `svipro visualize points` - 生成交互式地图
-  - `svipro visualize compare` - 对比策略
+  - `ssp visualize points` - 生成交互式地图
+  - `ssp visualize compare` - 对比策略
 
 **验证**:
 - 测试CLI生成可视化

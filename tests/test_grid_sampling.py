@@ -11,7 +11,7 @@ import numpy as np
 import geopandas as gpd
 from shapely.geometry import box, Polygon, Point
 
-from svipro import GridSampling, SamplingConfig
+from ssp import GridSampling, SamplingConfig
 
 
 class TestGridSamplingInitialization:

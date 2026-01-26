@@ -1,12 +1,12 @@
 """
 Unit tests for exception handling module.
 
-Tests SVIPro custom exceptions and error handling utilities.
+Tests SpatialSamplingPro custom exceptions and error handling utilities.
 """
 
 import pytest
-from svipro.exceptions import (
-    SVIProError,
+from ssp.exceptions import (
+    SpatialSamplingProError,
     ConfigurationError,
     BoundaryError,
     SamplingError,
@@ -19,12 +19,12 @@ from svipro.exceptions import (
 )
 
 
-class TestSVIProError:
-    """Test suite for base SVIProError class."""
+class TestSpatialSamplingProError:
+    """Test suite for base SpatialSamplingProError class."""
 
     def test_basic_error_initialization(self):
         """Test basic error initialization."""
-        error = SVIProError("Something went wrong")
+        error = SpatialSamplingProError("Something went wrong")
         assert str(error) == "Something went wrong"
         assert error.message == "Something went wrong"
         assert error.details == {}
@@ -48,7 +48,7 @@ class TestSVIProError:
         assert error_dict['details'] == details
 
     def test_all_exceptions_inherit_from_base(self):
-        """Test that all custom exceptions inherit from SVIProError."""
+        """Test that all custom exceptions inherit from SpatialSamplingProError."""
         exceptions = [
             ConfigurationError,
             BoundaryError,
@@ -61,7 +61,7 @@ class TestSVIProError:
 
         for exc_class in exceptions:
             error = exc_class("test message")
-            assert isinstance(error, SVIProError)
+            assert isinstance(error, SpatialSamplingProError)
             assert isinstance(error, Exception)
 
 
@@ -133,16 +133,16 @@ class TestFormatErrorContext:
         assert "❌ Error: Simple error" in formatted
         assert "ValueError" in formatted
 
-    def test_format_svipro_error_without_details(self):
-        """Test formatting SVIPro error without details."""
+    def test_format_spatial_sampling_pro_error_without_details(self):
+        """Test formatting SpatialSamplingPro error without details."""
         error = ConfigurationError("Invalid configuration")
         formatted = format_error_context(error, include_traceback=False)
 
         assert "❌ Error: Invalid configuration" in formatted
         assert "ConfigurationError" in formatted
 
-    def test_format_svipro_error_with_details(self):
-        """Test formatting SVIPro error with details."""
+    def test_format_spatial_sampling_pro_error_with_details(self):
+        """Test formatting SpatialSamplingPro error with details."""
         details = {'spacing': -10, 'min': 1}
         error = ConfigurationError("Invalid spacing", details=details)
         formatted = format_error_context(error, include_traceback=False)
@@ -204,7 +204,7 @@ class TestSuggestFix:
         error = ValueError("Unknown error type")
         suggestion = suggest_fix(error)
 
-        # Non-SVIPro errors have no specific suggestions
+        # Non-SpatialSamplingPro errors have no specific suggestions
         assert suggestion is None or "Tip:" in suggestion
 
     def test_suggest_fix_for_sampling_error(self):
@@ -249,7 +249,7 @@ class TestExceptionChaining:
         assert exc_info.value is error
 
     def test_catching_base_exception_class(self):
-        """Test catching all SVIPro errors with base class."""
+        """Test catching all SpatialSamplingPro errors with base class."""
         errors = [
             ConfigurationError("config"),
             BoundaryError("boundary"),
@@ -257,7 +257,7 @@ class TestExceptionChaining:
         ]
 
         for error in errors:
-            with pytest.raises(SVIProError):
+            with pytest.raises(SpatialSamplingProError):
                 raise error
 
 

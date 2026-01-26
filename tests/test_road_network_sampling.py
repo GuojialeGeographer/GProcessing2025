@@ -13,7 +13,7 @@ import geopandas as gpd
 import networkx as nx
 from shapely.geometry import box, Polygon, Point, LineString
 
-from svipro import RoadNetworkSampling, SamplingConfig
+from ssp import RoadNetworkSampling, SamplingConfig
 
 
 @pytest.fixture
@@ -132,7 +132,7 @@ class TestRoadNetworkSamplingGenerate:
         """Create a simple square boundary for testing."""
         return box(0, 0, 200, 100)
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_generate_returns_geodataframe(self, mock_ox, mock_road_graph, simple_box_boundary):
         """Test that generate returns GeoDataFrame."""
         # Mock OSM functions
@@ -147,7 +147,7 @@ class TestRoadNetworkSamplingGenerate:
         assert isinstance(result, gpd.GeoDataFrame)
         assert len(result) > 0
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_generate_has_required_columns(self, mock_ox, mock_road_graph, simple_box_boundary):
         """Test that generated GeoDataFrame has required columns."""
         mock_ox.config.return_value = None
@@ -167,7 +167,7 @@ class TestRoadNetworkSamplingGenerate:
         for col in required_columns:
             assert col in result.columns
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_generate_filters_by_road_types(self, mock_ox, mock_road_graph, simple_box_boundary):
         """Test that road type filtering works."""
         mock_ox.config.return_value = None
@@ -186,7 +186,7 @@ class TestRoadNetworkSamplingGenerate:
 
         with patch.object(RoadNetworkSampling, '_validate_boundary'):
             # Mock the boundary.contains at the module level to avoid CRS issues
-            with patch('svipro.sampling.road_network.Polygon.contains', return_value=True):
+            with patch('ssp.sampling.road_network.Polygon.contains', return_value=True):
                 strategy = RoadNetworkSampling(
                     SamplingConfig(spacing=50),
                     road_types={'primary'}
@@ -229,7 +229,7 @@ class TestRoadNetworkSamplingGenerate:
         multi_index = pd.MultiIndex.from_tuples(index, names=['u', 'v', 'key'])
         return gpd.GeoDataFrame(edges_data, index=multi_index, crs='EPSG:3857')
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_generate_with_empty_graph_raises_error(self, mock_ox, simple_box_boundary):
         """Test that empty graph raises appropriate error."""
         # Mock empty graph
@@ -245,7 +245,7 @@ class TestRoadNetworkSamplingGenerate:
 
             assert "No road network found" in str(excinfo.value)
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_sample_id_format(self, mock_ox, mock_road_graph, simple_box_boundary):
         """Test that sample IDs follow correct format."""
         mock_ox.config.return_value = None
@@ -260,7 +260,7 @@ class TestRoadNetworkSamplingGenerate:
         assert "road_network_sampling" in first_id
         assert '_' in first_id
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_timestamp_included(self, mock_ox, mock_road_graph, simple_box_boundary):
         """Test that timestamp is included and valid."""
         mock_ox.config.return_value = None
@@ -275,7 +275,7 @@ class TestRoadNetworkSamplingGenerate:
         timestamp_str = result['timestamp'].iloc[0]
         datetime.fromisoformat(timestamp_str)  # Should not raise
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_spacing_recorded_correctly(self, mock_ox, mock_road_graph, simple_box_boundary):
         """Test that spacing_m column records correct spacing."""
         mock_ox.config.return_value = None
@@ -284,7 +284,7 @@ class TestRoadNetworkSamplingGenerate:
 
         # Mock boundary.contains at module level to avoid CRS issues
         with patch.object(RoadNetworkSampling, '_validate_boundary'):
-            with patch('svipro.sampling.road_network.Polygon.contains', return_value=True):
+            with patch('ssp.sampling.road_network.Polygon.contains', return_value=True):
                 strategy = RoadNetworkSampling(SamplingConfig(spacing=75.5))
                 result = strategy.generate(simple_box_boundary)
 
@@ -323,7 +323,7 @@ class TestRoadNetworkSamplingGenerate:
 class TestRoadNetworkSamplingMetrics:
     """Test suite for calculate_road_network_metrics method."""
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_calculate_metrics_with_points(self, mock_ox, mock_road_graph):
         """Test metrics calculation with sample points."""
         mock_ox.config.return_value = None
@@ -355,7 +355,7 @@ class TestRoadNetworkSamplingMetrics:
 
             assert metrics['n_points'] == 1
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_calculate_metrics_without_points(self, mock_ox):
         """Test metrics calculation without sample points."""
         strategy = RoadNetworkSampling()
@@ -421,7 +421,7 @@ class TestRoadNetworkSamplingEdgeCases:
 
         assert "spacing must be positive" in str(excinfo.value)
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_network_type_preserved_in_output(self, mock_ox, mock_road_graph):
         """Test that network_type is preserved in output."""
         mock_ox.config.return_value = None
@@ -471,7 +471,7 @@ class TestRoadNetworkSamplingEdgeCases:
 class TestRoadNetworkSamplingReproducibility:
     """Test suite for reproducibility with seed parameter."""
 
-    @patch('svipro.sampling.road_network.ox')
+    @patch('ssp.sampling.road_network.ox')
     def test_same_seed_reproducible(self, mock_ox, mock_road_graph):
         """Test that same seed produces reproducible results."""
         mock_ox.config.return_value = None

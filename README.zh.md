@@ -1,6 +1,6 @@
-# SVIPro
+# SpatialSamplingPro
 
-**SVI Research Protocol & Optimization**: 面向可复现街景影像采样设计的标准化框架
+**Spatial Sampling Design Framework**: 面向可复现城市研究的空间采样标准化框架
 
 [English](README.md) | [中文](README.zh.md) | [开发计划](plan.zh.md)
 
@@ -8,11 +8,11 @@
 
 ## 🎯 项目愿景
 
-SVIPro 解决了城市研究中的一个关键方法学缺口：**缺乏标准化、透明和可复现的街景影像（SVI）研究采样方法学**。
+SpatialSamplingPro 解决了城市研究中的一个关键方法学缺口：**缺乏标准化、透明和可复现的空间研究采样方法学**。
 
 ### 核心问题
 
-当前的SVI研究存在以下问题：
+当前的空间研究存在以下问题：
 - ❌ 随意的采样间隔，缺乏科学依据
 - ❌ 空间覆盖不完整或数据冗余收集
 - ❌ 黑箱式方法学，无法复现
@@ -20,12 +20,12 @@ SVIPro 解决了城市研究中的一个关键方法学缺口：**缺乏标准�
 
 ### 我们的解决方案
 
-一个**科学、可复现、有完整文档**的采样设计框架，提供：
-- ✅ 生成标准化采样协议（而非大规模爬取）
+一个**科学、可复现、有完整文档**的空间采样设计框架，提供：
+- ✅ 生成各种应用的标准化采样协议
 - ✅ 提供多种基于科学的采样策略
 - ✅ 确保完全的方法学透明度
 - ✅ 实现可复现性（相同AOI + 相同参数 = 完全相同的结果）
-- ✅ 遵守法律和伦理标准（未经授权不得爬取）
+- ✅ 支持多元研究领域：城市绿地、交通、环境研究、人口研究等
 
 ---
 
@@ -44,8 +44,8 @@ SVIPro 解决了城市研究中的一个关键方法学缺口：**缺乏标准�
 
 ```bash
 # 克隆仓库
-git clone https://github.com/yourusername/svipro.git
-cd svipro
+git clone https://github.com/GuojialeGeographer/GProcessing2025.git
+cd GProcessing2025
 
 # 安装依赖（推荐使用 uv）
 uv sync --all-extras
@@ -57,7 +57,7 @@ poetry install
 ### 基础用法
 
 ```python
-from svipro import GridSampling, MetadataManager
+from ssp import GridSampling, MetadataManager
 from shapely.geometry import box
 
 # 定义研究区域（AOI）
@@ -87,63 +87,83 @@ print(f"密度: {metrics['density_pts_per_km2']} 点/平方公里")
 
 ```bash
 # 基础网格采样
-svipro sample grid --spacing 100 --aoi aoi.geojson --output points.geojson
+ssp sample grid --spacing 100 --aoi aoi.geojson --output points.geojson
 
 # 路网采样
-svipro sample road --spacing 50 --network drive --aoi hongkong.geojson --output hk_points.geojson
+ssp sample road --spacing 50 --network drive --aoi hongkong.geojson --output hk_points.geojson
 
 # 生成协议
-svipro protocol create points.geojson --output protocol.yaml
+ssp protocol create points.geojson --output protocol.yaml
 
 # 可视化覆盖
-svipro visualize points.geojson --output coverage_map.html
+ssp visualize points.geojson --output coverage_map.html
 ```
 
 ---
 
 ## 📋 功能特性
 
-### 第一阶段：核心采样算法（MVP）
+### ✅ 已实现功能（v0.1.0）
 
+#### 采样策略
 - **网格采样** - 基于规则网格，完全可复现
+  - 均匀空间覆盖
+  - 可配置间距和对齐方式
+  - 基于种子的可复现性
+
 - **路网采样** - 基于OSM，沿道路网络布点
-- **优化覆盖** - 贪心算法实现最大覆盖
-- **分层随机** - 统计学有效的随机采样
+  - OSMnx集成自动下载道路网络
+  - 可配置网络类型（全部、步行、驾驶、自行车）
+  - 道路类型过滤（19种OSM道路类型）
 
-### 第二阶段：元数据与可复现性
+#### 质量评估
+- **覆盖指标** - 点密度、面积、空间范围
+- **路网指标** - 边数、节点数、总长度、连通性
+- **质量可视化** - 交互式统计图表
 
-- **协议记录器** - 完整记录所有参数
-- **质量指标** - 覆盖密度、空间分布分析
-- **可复现性报告** - 自动生成方法学部分
-- **FAIR元数据** - 标准化数据描述
+#### 元数据与文档
+- **协议生成** - 基于YAML的采样协议文件
+- **元数据导出** - 带完整参数文档的GeoJSON
+- **时间戳跟踪** - ISO 8601时间戳确保可复现性
 
-### 第三阶段：可视化与评估
+#### 可视化工具
+- **交互式地图** - 基于Folium的网络地图
+- **统计图表** - Matplotlib/Seaborn统计可视化
+- **策略对比** - 多策略对比图表
+- **覆盖分析** - 空间分布热图、最近邻分析
 
-- **交互式地图** - 基于Folium的可视化
-- **覆盖分析** - 空间分布指标
-- **策略对比** - 比较多种采样方法
-- **偏差检测** - 识别采样不足/过度的区域
+#### 命令行接口
+- **完整CLI** - 所有功能可通过命令行访问
+- **彩色输出** - 用户友好的终端消息
+- **错误处理** - 全面的验证和错误消息
+
+### 🚧 计划功能（未来版本）
+
+- 优化覆盖 - 贪心算法实现最大覆盖
+- 分层随机 - 统计学有效的随机采样
+- 高级空间策略 - 六边形采样、自适应密度采样
+- 基于人口的采样 - 人口感知的采样设计
 
 ---
 
 ## 🔬 研究背景
 
-本项目受以下研究的启发并进行了改进：
+本项目受城市研究中空间采样方法学的启发并进行了改进，包括：
 
 > **Wang et al. (2025)** - Cross-platform complementarity: Assessing the data quality and availability of Google Street View and Baidu Street View. *Transactions in Urban Data, Science, and Technology*. DOI: 10.1177/27541231241311474
 
 ### 参考文献的核心贡献
 
-1. **蜘蛛网式采集方法** - 系统化的元数据发现
-2. **元数据驱动方法** - 专注于文档化
+1. **系统化采集方法** - 标准化的元数据发现
+2. **元数据驱动方法** - 专注于文档化和可复现性
 3. **质量评估框架** - 多维度评估
 
 ### 我们的创新
 
 1. ✅ **更好的代码架构** - 模块化、可扩展设计
 2. ✅ **可复现性保证** - 基于种子的确定性算法
-3. ✅ **合规优先** - 不爬取，仅生成协议
-4. ✅ **多种策略** - 不仅蜘蛛网，还有网格、路网等
+3. ✅ **更广的应用范围** - 不仅限于街景，支持多种空间研究
+4. ✅ **多种策略** - 网格、路网等更多采样方法
 5. ✅ **用户友好接口** - Python API 和 CLI
 6. ✅ **质量指标** - 内置覆盖和偏差分析
 
@@ -234,16 +254,17 @@ MIT许可证。参见 [LICENSE](LICENSE)。
 
 ## 🔮 未来路线图
 
-### 第四阶段：API成本优化（未来）
-- 合法API使用的成本估算器
-- 采样优化算法
-- 多源对比工具
+### 第四阶段：高级采样方法（未来）
+- 高级空间采样算法
+- 多目标优化
+- 自适应采样策略
 
 ### 研究贡献
 本项目旨在实现：
-1. **方法学论文** - 关于采样标准化
+1. **方法学论文** - 关于空间采样标准化
 2. **软件论文** - 发表于 *SoftwareX* 或 *JOSS*
 3. **可复现的城市研究** - 使用标准化协议
+4. **跨领域应用** - 环境科学、交通、城市规划、人口学等领域
 
 ---
 

@@ -1,6 +1,6 @@
-# SVIPro Getting Started Guide
+# SpatialSamplingPro Getting Started Guide
 
-A comprehensive tutorial for using SVIPro (SVI Research Protocol & Optimization) - A standardized framework for reproducible Street View Imagery sampling design.
+A comprehensive tutorial for using SpatialSamplingPro (Spatial Sampling Design Framework) - A standardized framework for reproducible Street View Imagery sampling design.
 
 ## Table of Contents
 
@@ -45,10 +45,10 @@ pip install matplotlib seaborn folium pyproj
 
 ```bash
 # Check version
-python -c "import svipro; print(svipro.__version__)"
+python -c "import ssp; print(ssp.__version__)"
 
 # Test CLI
-svipro --help
+ssp --help
 ```
 
 ---
@@ -60,7 +60,7 @@ svipro --help
 Generate a regular grid of sample points:
 
 ```python
-from svipro import GridSampling, SamplingConfig
+from ssp import GridSampling, SamplingConfig
 from shapely.geometry import box
 import geopandas as gpd
 
@@ -88,16 +88,16 @@ print(f"Generated {len(points)} sample points")
 
 ```bash
 # Generate grid sampling points
-svipro sample grid \
+ssp sample grid \
   --spacing 100 \
   --aoi hong_kong.geojson \
   --output hk_samples.geojson
 
 # Calculate quality metrics
-svipro quality metrics --points hk_samples.geojson
+ssp quality metrics --points hk_samples.geojson
 
 # Create visualization
-svipro visualize points-map \
+ssp visualize points-map \
   --points hk_samples.geojson \
   --output hk_map.html
 ```
@@ -111,7 +111,7 @@ svipro visualize points-map \
 Grid sampling provides uniform spatial coverage:
 
 ```python
-from svipro import GridSampling, SamplingConfig
+from ssp import GridSampling, SamplingConfig
 from shapely.geometry import box
 
 # Define boundary
@@ -146,7 +146,7 @@ print(f"Area: {metrics['area_km2']:.4f} km²")
 Road network sampling places points along actual roads:
 
 ```python
-from svipro import RoadNetworkSampling, SamplingConfig
+from ssp import RoadNetworkSampling, SamplingConfig
 from shapely.geometry import box
 
 # Define boundary
@@ -185,7 +185,7 @@ strategy.to_geojson(
 )
 
 # Create visualizations
-from svipro import plot_coverage_statistics, plot_spatial_distribution
+from ssp import plot_coverage_statistics, plot_spatial_distribution
 
 # Statistics plots
 fig = plot_coverage_statistics(
@@ -210,7 +210,7 @@ fig = plot_spatial_distribution(
 Compare multiple sampling strategies:
 
 ```python
-from svipro import compare_strategies, GridSampling, SamplingConfig
+from ssp import compare_strategies, GridSampling, SamplingConfig
 
 boundary = box(114.15, 22.28, 114.16, 22.29)
 
@@ -230,7 +230,7 @@ fig = compare_strategies(
 ### 2. Custom Configuration
 
 ```python
-from svipro import SamplingConfig
+from ssp import SamplingConfig
 
 # Custom configuration
 config = SamplingConfig(
@@ -248,7 +248,7 @@ config = SamplingConfig(
 ### 3. Road Type Filtering
 
 ```python
-from svipro import RoadNetworkSampling, SamplingConfig
+from ssp import RoadNetworkSampling, SamplingConfig
 
 # Filter by specific road types
 strategy = RoadNetworkSampling(
@@ -270,10 +270,10 @@ strategy = RoadNetworkSampling(
 
 ```bash
 # Grid sampling
-svipro sample grid [OPTIONS]
+ssp sample grid [OPTIONS]
 
 # Road network sampling
-svipro sample road-network [OPTIONS]
+ssp sample road-network [OPTIONS]
 ```
 
 **Common Options**:
@@ -288,23 +288,23 @@ svipro sample road-network [OPTIONS]
 
 ```bash
 # Calculate metrics
-svipro quality metrics --points samples.geojson
+ssp quality metrics --points samples.geojson
 
 # Generate protocol
-svipro protocol create --points samples.geojson --output protocol.yaml
+ssp protocol create --points samples.geojson --output protocol.yaml
 ```
 
 ### Visualization Commands
 
 ```bash
 # Interactive map
-svipro visualize points-map --points samples.geojson --output map.html
+ssp visualize points-map --points samples.geojson --output map.html
 
 # Statistics plots
-svipro visualize statistics --points samples.geojson --output stats.png
+ssp visualize statistics --points samples.geojson --output stats.png
 
 # Strategy comparison
-svipro visualize compare --aoi boundary.geojson --output comparison.png
+ssp visualize compare --aoi boundary.geojson --output comparison.png
 ```
 
 ---
@@ -380,7 +380,7 @@ strategy = RoadNetworkSampling(
 
 ## Troubleshooting
 
-### Issue: "ModuleNotFoundError: No module named 'svipro'"
+### Issue: "ModuleNotFoundError: No module named 'ssp'"
 
 **Solution**:
 ```bash
@@ -425,10 +425,10 @@ pip install osmnx>=2.0.0
 pip install -e .
 
 # Check installation
-which svipro
+which ssp
 
 # Or use Python module syntax
-python -m svipro.cli --help
+python -m ssp.cli --help
 ```
 
 ---

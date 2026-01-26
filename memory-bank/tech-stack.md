@@ -1,4 +1,4 @@
-# SVIPro 技术栈
+# SpatialSamplingPro 技术栈
 
 **原则**: 最简单但最健壮（Simplest but Most Robust）
 
@@ -51,7 +51,7 @@
 
 ### 模块化设计
 ```
-svipro/
+ssp/
 ├── sampling/          # 采样策略模块
 │   ├── base.py       # 抽象基类（必须先读）
 │   ├── grid.py       # 网格采样

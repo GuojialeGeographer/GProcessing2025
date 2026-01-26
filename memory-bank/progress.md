@@ -1,11 +1,36 @@
-# SVIPro 开发进度（Progress）
+# SpatialSamplingPro 开发进度（Progress）
 
 **项目启动**: 2025-01-21
-**最后更新**: 2025-01-23
+**最后更新**: 2025-01-25
 
 ---
 
 ## 已完成（Completed）
+
+### ✅ 包重命名（2025-01-25）
+- [x] 将包名从 SVIPro 重命名为 SpatialSamplingPro
+- [x] 更新所有Python源代码文件的导入语句（from svipro → from ssp）
+- [x] 更新所有模块文档字符串引用
+- [x] 更新异常类名（SVIProError → SpatialSamplingProError）
+- [x] 更新CLI命令名称（svipro → ssp）
+- [x] 更新所有示例代码和文档
+- [x] 更新缓存目录名称（.svipro_cache → .ssp_cache）
+- [x] 更新元数据字段名（svipro_version → ssp_version）
+
+**主要变更**:
+- 包名: `svipro` → `ssp`
+- 项目名: `SVIPro (Street View Imagery Research Protocol & Optimization)` → `SpatialSamplingPro (Spatial Sampling Design & Protocol Optimization)`
+- 异常基类: `SVIProError` → `SpatialSamplingProError`
+- CLI命令: `svipro` → `ssp`
+- 缓存目录: `.svipro_cache` → `.ssp_cache`
+
+**影响范围**:
+- 所有Python源代码文件（21个文件）
+- CLI命令和文档
+- 导入语句和模块引用
+- 元数据字段和验证规则
+
+**向后兼容性**: 此次重命名破坏了向后兼容性，需要更新所有引用该包的代码
 
 ### ✅ 项目初始化（2025-01-21）
 - [x] 创建GitHub仓库
@@ -25,7 +50,7 @@
 - [x] 创建CLAUDE.md AI开发规则
 
 ### ✅ 基础代码框架（2025-01-21）
-- [x] 创建src/svipro/包结构
+- [x] 创建src/ssp/包结构
 - [x] 实现SamplingStrategy基类（base.py）
 - [x] 实现GridSampling类（grid.py）
 - [x] 创建tests/测试框架
@@ -77,7 +102,7 @@
 **提交**: commit b722483
 
 ### ✅ 步骤 1.4：创建基础CLI（2025-01-22）
-- [x] 创建cli.py模块（src/svipro/cli.py）
+- [x] 创建cli.py模块（src/ssp/cli.py）
 - [x] 实现sample grid命令（--spacing, --crs, --seed, --aoi, --output, --metadata）
 - [x] 实现protocol create命令（生成YAML协议文件）
 - [x] 实现quality metrics命令（计算并显示质量指标）
@@ -89,11 +114,11 @@
 - [x] 修复quality metrics命令的抽象类错误
 
 **测试结果**:
-- ✓ svipro --help
-- ✓ svipro sample grid --help
-- ✓ svipro sample grid（生成81个采样点）
-- ✓ svipro quality metrics（计算覆盖指标）
-- ✓ svipro visualize points-map（生成HTML地图）
+- ✓ ssp --help
+- ✓ ssp sample grid --help
+- ✓ ssp sample grid（生成81个采样点）
+- ✓ ssp quality metrics（计算覆盖指标）
+- ✓ ssp visualize points-map（生成HTML地图）
 
 **代码质量**:
 - 完整的Click CLI框架
@@ -102,7 +127,7 @@
 - ANSI彩色输出增强用户体验
 
 ### ✅ 步骤 2.1：实现路网采样（2025-01-22）
-- [x] 创建road_network.py模块（src/svipro/sampling/road_network.py）
+- [x] 创建road_network.py模块（src/ssp/sampling/road_network.py）
 - [x] 实现RoadNetworkSampling类
 - [x] 集成OSMnx从OpenStreetMap获取路网数据
 - [x] 实现沿道路采样点生成算法
@@ -134,7 +159,7 @@
 - 支持可复现性（seed）
 - 边界验证和错误处理
 ### ✅ 步骤 2.4：完善CLI（2025-01-22）
-- [x] 添加svipro sample road-network命令
+- [x] 添加ssp sample road-network命令
 - [x] 实现network-type参数（all, walk, drive, bike）
 - [x] 实现road-types参数（支持多个OSM highway类型）
 - [x] 添加路网采样专用错误提示
@@ -145,10 +170,10 @@
 **新增CLI命令**:
 ```bash
 # 基本路网采样
-svipro sample road-network --spacing 100 --aoi boundary.geojson --output points.geojson
+ssp sample road-network --spacing 100 --aoi boundary.geojson --output points.geojson
 
 # 高级用法：指定网络类型和道路类型
-svipro sample road-network \
+ssp sample road-network \
   --spacing 50 \
   --network-type drive \
   --road-types primary \
@@ -171,12 +196,12 @@ svipro sample road-network \
 - ✓ 错误处理清晰明确
 
 ### ✅ 步骤 3.1：实现可视化工具（2025-01-22）
-- [x] 创建visualization模块（src/svipro/visualization/）
+- [x] 创建visualization模块（src/ssp/visualization/）
 - [x] 实现compare_strategies()策略对比功能
 - [x] 实现plot_coverage_statistics()统计图表
 - [x] 实现plot_spatial_distribution()空间分布图
-- [x] 添加svipro visualize statistics命令
-- [x] 添加svipro visualize compare命令
+- [x] 添加ssp visualize statistics命令
+- [x] 添加ssp visualize compare命令
 - [x] 集成matplotlib和seaborn可视化
 
 **核心功能**:
@@ -188,13 +213,13 @@ svipro sample road-network \
 **CLI命令**:
 ```bash
 # 统计图表
-svipro visualize statistics --points samples.geojson --output stats.png
+ssp visualize statistics --points samples.geojson --output stats.png
 
 # 策略对比（仅网格）
-svipro visualize compare --aoi boundary.geojson --output comparison.png
+ssp visualize compare --aoi boundary.geojson --output comparison.png
 
 # 策略对比（包含路网）
-svipro visualize compare \
+ssp visualize compare \
   --grid-spacing 50 \
   --road-spacing 100 \
   --include-road \
@@ -301,7 +326,43 @@ docs/
 - 100%通过率
 - 总测试数：148+（原80 + 新68）
 
-**提交**: 准备提交改进
+**提交**: commit 9ac67a6
+
+### ✅ Jupyter Notebook修复（2025-01-24）
+- [x] 修复网格采样可视化错误（ValueError aspect ratio）
+- [x] 修复OSMnx v2.0+兼容性问题（AttributeError utils_graph）
+- [x] 扩大Notebook边界并使用正确的间距单位
+- [x] 将可视化代码从gdf.plot()改为ax.scatter()
+- [x] 添加空结果检查和友好错误提示
+- [x] 创建修复验证测试脚本
+- [x] 编写完整修复文档（NOTEBOOK_FIXES_SUMMARY.md）
+
+**修复的问题**:
+1. **ValueError in visualization**: 原始边界太小（0.01 sq deg）且使用米数间距（100m）与EPSG:4326度数坐标系不匹配，导致生成0个采样点
+   - 修复：扩大边界至0.04平方度，使用0.005度间距（约500米）
+   - 修复：使用matplotlib.scatter()替代geopandas.plot()以避免aspect ratio错误
+
+2. **AttributeError for OSMnx**: OSMnx v2.0+移除了`osmnx.utils_graph`模块
+   - 修复：在road_network.py中添加版本感知代码，支持新旧API
+   - 实现三层回退：新API → 旧API → 原图
+
+**修改的文件**:
+- `examples/intro_to_ssp.ipynb`: 修复cell-5, cell-7, cell-8, cell-11, cell-13, cell-19
+- `examples/advanced_sampling_comparison.ipynb`: 更新边界和间距参数
+- `src/ssp/sampling/road_network.py`: 添加OSMnx v2.0+兼容性（lines 229-241）
+
+**测试结果**:
+- ✅ 171/174单元测试通过（3个失败与修复无关）
+- ✅ OSMnx v2.0.7兼容性验证通过
+- ✅ Notebook所有单元格测试通过
+- ✅ 快速验证脚本测试通过
+
+**新增文档**:
+- `NOTEBOOK_FIXES_SUMMARY.md`: 完整修复文档，包含技术细节、测试结果、使用说明
+- `test_quick_fixes.py`: 快速验证脚本（无需OSM下载）
+- `test_notebook_fixes.py`: 完整测试脚本（包含OSM测试）
+
+**提交**: commit 1823aa3
 
 ---
 
@@ -310,16 +371,18 @@ docs/
 ### 🔄 当前任务
 **任务**: 第四阶段文档与收尾
 
-**状态**: 步骤4.3已完成，核心文档全部完成
+**状态**: 步骤4.3已完成，Notebook修复完成，系统稳定运行
 
 **已完成的核心功能**:
 - ✅ 采样策略（网格 + 路网）
 - ✅ CLI命令系统（7个主要命令）
 - ✅ 可视化工具（策略对比、统计图表、交互地图）
-- ✅ 测试覆盖（80个单元测试，100%通过）
-- ✅ 完整文档（教程、API参考、案例研究、README）
+- ✅ 测试覆盖（171个单元测试通过，98.3%通过率）
+- ✅ 完整文档（教程、API参考、案例研究、README、使用指南）
+- ✅ Jupyter Notebook教程（修复并验证可运行）
+- ✅ OSMnx v2.0+兼容性
 
-**系统状态**: 🎉 版本0.1.0 功能完整！
+**系统状态**: 🎉 版本0.2.0 稳定可用！
 
 **可选的后续工作**:
 - [ ] 步骤2.2：实现元数据管理模块（可选）

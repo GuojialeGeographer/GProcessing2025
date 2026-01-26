@@ -1,7 +1,7 @@
 [project]
-name = "svipro"
-version = "0.2.0"
-description = "SVI Research Protocol & Optimization: A Standardized Framework for Reproducible Street View Imagery Sampling Design"
+name = "ssp"
+version = "0.1.0"
+description = "SpatialSamplingPro: A Standardized Framework for Reproducible Spatial Sampling Design in Urban Studies"
 authors = [
     {name = "Jiale Guo", email = "jiale.guo@mail.polimi.it"},
     {name = "Mingfeng Tang", email = "mingfeng.tang@mail.polimi.it"}
@@ -14,15 +14,16 @@ license = {text = "MIT"}
 readme = "README.md"
 requires-python = ">=3.10,<3.14"
 keywords = [
-    "street-view",
+    "spatial-sampling",
     "sampling",
     "gis",
     "geospatial",
     "urban-studies",
     "reproducibility",
-    "svi",
+    "urban-research",
     "osm",
     "road-network",
+    "grid-sampling",
 ]
 classifiers = [
     "Development Status :: 4 - Beta",
@@ -63,7 +64,7 @@ Repository = "https://github.com/GuojialeGeographer/GProcessing2025"
 Issues = "https://github.com/GuojialeGeographer/GProcessing2025/issues"
 
 [project.scripts]
-svipro = "svipro.cli:main"
+ssp = "ssp.cli:main"
 
 [project.optional-dependencies]
 dev = [
@@ -104,17 +105,17 @@ progress = [
     "tqdm>=4.65.0",
 ]
 all = [
-    "svipro[dev,docs,progress]",
+    "ssp[dev,docs,progress]",
 ]
 
 [tool.poetry]
-name = "svipro"
+name = "ssp"
 version = "0.1.0"
-description = "SVI Research Protocol & Optimization: A Standardized Framework for Reproducible Street View Imagery Sampling Design"
+description = "SpatialSamplingPro: A Standardized Framework for Reproducible Spatial Sampling Design in Urban Studies"
 authors = ["Jiale Guo <jiale.guo@mail.polimi.it>", "Mingfeng Tang <mingfeng.tang@mail.polimi.it>"]
 license = "MIT"
 readme = "README.md"
-packages = [{include = "svipro", from = "src"}]
+packages = [{include = "ssp", from = "src"}]
 
 [tool.poetry.dependencies]
 python = ">=3.10,<3.14"

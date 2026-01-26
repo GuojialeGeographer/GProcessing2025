@@ -1,6 +1,6 @@
-# SVIPro API Reference
+# SpatialSamplingPro API Reference
 
-Complete API documentation for SVIPro (SVI Research Protocol & Optimization) package.
+Complete API documentation for SpatialSamplingPro (Spatial Sampling Design Framework) package.
 
 ## Table of Contents
 
@@ -34,7 +34,7 @@ Configuration dataclass for sampling strategies.
 
 **Example**:
 ```python
-from svipro import SamplingConfig
+from ssp import SamplingConfig
 
 config = SamplingConfig(
     spacing=100.0,
@@ -65,7 +65,7 @@ Abstract base class for all sampling strategies.
 
 **Example**:
 ```python
-from svipro import SamplingStrategy
+from ssp import SamplingStrategy
 from shapely.geometry import box
 
 # Don't instantiate directly - use subclasses
@@ -92,7 +92,7 @@ Regular grid sampling strategy.
 
 **Example**:
 ```python
-from svipro import GridSampling, SamplingConfig
+from ssp import GridSampling, SamplingConfig
 from shapely.geometry import box
 
 boundary = box(0, 0, 1000, 1000)
@@ -129,7 +129,7 @@ Road network-based sampling strategy.
 
 **Example**:
 ```python
-from svipro import RoadNetworkSampling, SamplingConfig
+from ssp import RoadNetworkSampling, SamplingConfig
 from shapely.geometry import box
 
 boundary = box(114.15, 22.28, 114.16, 22.29)  # Hong Kong
@@ -170,7 +170,7 @@ Compare multiple sampling strategies on the same boundary.
 
 **Example**:
 ```python
-from svipro import compare_strategies, GridSampling, SamplingConfig
+from ssp import compare_strategies, GridSampling, SamplingConfig
 from shapely.geometry import box
 
 strategies = {
@@ -203,7 +203,7 @@ Plot coverage statistics for sample points.
 
 **Example**:
 ```python
-from svipro import plot_coverage_statistics
+from ssp import plot_coverage_statistics
 
 fig = plot_coverage_statistics(points, "statistics.png")
 ```
@@ -224,7 +224,7 @@ Create clean spatial distribution plot.
 
 **Example**:
 ```python
-from svipro import plot_spatial_distribution
+from ssp import plot_spatial_distribution
 from shapely.geometry import box
 
 fig = plot_spatial_distribution(
@@ -240,7 +240,7 @@ fig = plot_spatial_distribution(
 
 ### Command Groups
 
-#### `svipro sample`
+#### `ssp sample`
 
 Generate spatial sample points.
 
@@ -258,10 +258,10 @@ Generate spatial sample points.
 
 **Example**:
 ```bash
-svipro sample grid --spacing 100 --aoi boundary.geojson --output points.geojson
+ssp sample grid --spacing 100 --aoi boundary.geojson --output points.geojson
 ```
 
-#### `svipro quality`
+#### `ssp quality`
 
 Calculate quality metrics for sample points.
 
@@ -270,10 +270,10 @@ Calculate quality metrics for sample points.
 
 **Example**:
 ```bash
-svipro quality metrics --points samples.geojson
+ssp quality metrics --points samples.geojson
 ```
 
-#### `svipro visualize`
+#### `ssp visualize`
 
 Visualize sample points and coverage.
 
@@ -284,7 +284,7 @@ Visualize sample points and coverage.
 
 **Example**:
 ```bash
-svipro visualize statistics --points samples.geojson --output stats.png
+ssp visualize statistics --points samples.geojson --output stats.png
 ```
 
 ---
@@ -353,7 +353,7 @@ svipro visualize statistics --points samples.geojson --output stats.png
 
 ```python
 # Import all main components
-from svipro import (
+from ssp import (
     SamplingConfig,
     SamplingStrategy,
     GridSampling,
@@ -367,9 +367,9 @@ from svipro import (
 ### Version Information
 
 ```python
-import svipro
-print(svipro.__version__)  # '0.1.0'
-print(svipro.__author__)    # 'Jiale Guo, Mingfeng Tang'
+import ssp
+print(ssp.__version__)  # '0.1.0'
+print(ssp.__author__)    # 'Jiale Guo, Mingfeng Tang'
 ```
 
 ---
@@ -380,7 +380,7 @@ All functions and methods include complete type hints:
 
 ```python
 from typing import Dict, Any, Optional
-from svipro import GridSampling, SamplingConfig
+from ssp import GridSampling, SamplingConfig
 from shapely.geometry import Polygon
 import geopandas as gpd
 

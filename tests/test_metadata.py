@@ -17,8 +17,8 @@ import platform
 import sys
 sys.path.insert(0, '/Users/bruce/10_School/11_MSC-Politecnico di Milano/03-Third Sem-Archive/GProcessing/2025-2026/GProcessing2025/src')
 
-from svipro import GridSampling, SamplingConfig, SamplingMetadata
-from svipro.metadata import (
+from ssp import GridSampling, SamplingConfig, SamplingMetadata
+from ssp.metadata import (
     SamplingStrategyType,
     BoundaryMetadata,
     SamplingParametersMetadata,
@@ -75,7 +75,7 @@ class TestMetadataModels:
         meta = ExecutionMetadata(
             timestamp="2025-01-22T10:00:00",
             python_version="3.10.0",
-            svipro_version="0.1.0",
+            ssp_version="0.1.0",
             os_info="Darwin 25.1.0",
             hostname="test-machine",
             user="test-user",
@@ -83,7 +83,7 @@ class TestMetadataModels:
         )
 
         assert meta.python_version == "3.10.0"
-        assert meta.svipro_version == "0.1.0"
+        assert meta.ssp_version == "0.1.0"
         assert meta.runtime_seconds == 5.5
 
     def test_data_source_metadata(self):
@@ -230,7 +230,7 @@ class TestMetadataModels:
         assert metadata.parameters.strategy_type == "grid_sampling"
 
         # Check execution metadata
-        assert metadata.execution.svipro_version is not None
+        assert metadata.execution.ssp_version is not None
         assert metadata.execution.python_version is not None
 
         # Check results metadata

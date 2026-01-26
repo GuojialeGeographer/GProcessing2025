@@ -1,8 +1,8 @@
 """
-SVIPro: Geospatial Processing and Analysis Tools for Geoinformatics Engineering
+SpatialSamplingPro: Spatial Sampling Design Framework for Reproducible Urban Studies
 
-A Python package for geospatial data processing and analysis, developed as part
-of the Geospatial Processing course at Politecnico di Milano.
+A Python package for spatial sampling design and analysis in urban studies,
+developed as part of the Geospatial Processing course at Politecnico di Milano.
 
 Authors:
     Jiale Guo (jiale.guo@mail.polimi.it)

@@ -1,6 +1,6 @@
-# SVIPro
+# SpatialSamplingPro
 
-**SVI Research Protocol & Optimization**: A Standardized Framework for Reproducible Street View Imagery Sampling Design
+**Spatial Sampling Design Framework**: A Standardized Framework for Reproducible Urban Studies
 
 [English](README.md) | [中文](README.zh.md) | [Development Plan](plan.md)
 
@@ -8,11 +8,11 @@
 
 ## 🎯 Project Vision
 
-SVIPro addresses a critical methodological gap in urban studies: **the lack of standardized, transparent, and reproducible sampling methodologies for Street View Imagery (SVI) research**.
+SpatialSamplingPro addresses a critical methodological gap in urban studies: **the lack of standardized, transparent, and reproducible sampling methodologies for spatial research**.
 
 ### The Problem
 
-Current SVI research suffers from:
+Current spatial research suffers from:
 - ❌ Arbitrary sampling intervals with no scientific basis
 - ❌ Incomplete spatial coverage or redundant data collection
 - ❌ Black-box methodologies that cannot be reproduced
@@ -20,12 +20,12 @@ Current SVI research suffers from:
 
 ### Our Solution
 
-A **scientific, reproducible, and documented** sampling design framework that:
-- ✅ Generates standardized sampling protocols (not mass crawling)
+A **scientific, reproducible, and documented** spatial sampling design framework that:
+- ✅ Generates standardized sampling protocols for various applications
 - ✅ Provides multiple scientifically-grounded sampling strategies
 - ✅ Ensures complete methodological transparency
 - ✅ Enables reproducibility (same AOI + same parameters = identical results)
-- ✅ Complies with legal and ethical standards (no unauthorized crawling)
+- ✅ Supports diverse research domains: urban green space, transportation, environmental studies, population research, and more
 
 ---
 
@@ -51,13 +51,13 @@ cd GProcessing2025
 pip install -e .
 
 # Verify installation
-svipro --help
+ssp --help
 ```
 
 ### Python API Usage
 
 ```python
-from svipro import GridSampling, SamplingConfig
+from ssp import GridSampling, SamplingConfig
 from shapely.geometry import box
 
 # Define Area of Interest (AOI)
@@ -82,25 +82,25 @@ print(f"Density: {metrics['density_pts_per_km2']:.2f} pts/km²")
 
 ```bash
 # Grid sampling
-svipro sample grid --spacing 100 --aoi aoi.geojson --output points.geojson
+ssp sample grid --spacing 100 --aoi aoi.geojson --output points.geojson
 
 # Road network sampling
-svipro sample road-network --spacing 100 --network-type drive --aoi hk.geojson --output hk_points.geojson
+ssp sample road-network --spacing 100 --network-type drive --aoi hk.geojson --output hk_points.geojson
 
 # Quality metrics
-svipro quality metrics --points samples.geojson
+ssp quality metrics --points samples.geojson
 
 # Generate protocol
-svipro protocol create --points samples.geojson --output protocol.yaml
+ssp protocol create --points samples.geojson --output protocol.yaml
 
 # Interactive map
-svipro visualize points-map --points samples.geojson --output map.html
+ssp visualize points-map --points samples.geojson --output map.html
 
 # Statistics plots
-svipro visualize statistics --points samples.geojson --output stats.png
+ssp visualize statistics --points samples.geojson --output stats.png
 
 # Strategy comparison
-svipro visualize compare --aoi boundary.geojson --output comparison.png
+ssp visualize compare --aoi boundary.geojson --output comparison.png
 ```
 
 ---
@@ -145,29 +145,29 @@ svipro visualize compare --aoi boundary.geojson --output comparison.png
 
 - Optimized Coverage - Greedy algorithm for maximum coverage
 - Stratified Random - Statistically valid random sampling
-- API Cost Estimation - Cost estimation for legal API usage
-- Multi-source Comparison - Compare across different SVI providers
+- Advanced Spatial Strategies - Hexagonal sampling, adaptive density sampling
+- Population-based Sampling - Demographic-aware sampling design
 
 ---
 
 ## 🔬 Research Background
 
-This project is inspired by and improves upon:
+This project is inspired by and improves upon spatial sampling methodologies in urban studies, including:
 
 > **Wang et al. (2025)** - Cross-platform complementarity: Assessing the data quality and availability of Google Street View and Baidu Street View. *Transactions in Urban Data, Science, and Technology*. DOI: 10.1177/27541231241311474
 
-### Key Contributions from Reference
+### Key Contributions from References
 
-1. **Spider-Web Collection Method** - Systematic metadata discovery
-2. **Metadata-Driven Approach** - Focus on documentation
+1. **Systematic Collection Methods** - Standardized metadata discovery
+2. **Metadata-Driven Approach** - Focus on documentation and reproducibility
 3. **Quality Assessment Framework** - Multi-dimensional evaluation
 
 ### Our Innovations
 
 1. ✅ **Better Code Architecture** - Modular, extensible design
 2. ✅ **Reproducibility Guarantees** - Seed-based deterministic algorithms
-3. ✅ **Compliance-First** - No crawling, only protocol generation
-4. ✅ **Multiple Strategies** - Not just spider-web, but grid, road-based, etc.
+3. ✅ **Broader Application Scope** - Not limited to street view, supports various spatial studies
+4. ✅ **Multiple Strategies** - Grid, road-based, and more sampling approaches
 5. ✅ **User-Friendly Interface** - Both Python API and CLI
 6. ✅ **Quality Metrics** - Built-in coverage and bias analysis
 
@@ -227,13 +227,28 @@ See [pyproject.toml](pyproject.toml) for complete dependency list.
 
 ### 📈 Test Coverage
 
-- **Total Tests**: 80 unit tests
+**Core Module Tests** (127 tests, 100% pass rate):
+- **Overall Coverage**: 30%
 - **Sampling Module**: 53 tests
-  - Base architecture: 27 tests
-  - Grid sampling: 32 tests
-  - Road network sampling: 21 tests
-- **Pass Rate**: 100%
-- **Coverage**: Core functionality fully tested
+  - Base architecture: 27 tests (95% coverage)
+  - Grid sampling: 32 tests (98% coverage)
+  - Road network sampling: 21 tests (12% coverage - requires network)
+- **Exception Handling**: 27 tests (93% coverage)
+- **Edge Cases**: 41 tests (83% coverage)
+- **Metadata**: 6 tests (13-52% coverage)
+- **Visualization**: Not tested in core suite
+
+**Module-Level Coverage**:
+- `sampling/base.py`: 95%
+- `sampling/grid.py`: 98%
+- `exceptions.py`: 93%
+- `utils/edge_cases.py`: 83%
+- `metadata/models.py`: 52%
+- `cli.py`: 0% (not tested)
+- `visualization/comparison.py`: 12%
+- `sampling/road_network.py`: 12% (requires network)
+
+**Note**: Full test suite (220 tests) includes integration tests requiring network access and external dependencies. Core tests run in 4.8s without network requirements.
 
 ### 📚 Documentation
 
@@ -309,16 +324,17 @@ MIT License. See [LICENSE](LICENSE).
 
 ## 🔮 Future Roadmap
 
-### Phase 4: API Cost Optimization (Future)
-- Cost estimator for legal API usage
-- Sampling optimization algorithms
-- Multi-source comparison tools
+### Phase 4: Advanced Sampling Methods (Future)
+- Advanced spatial sampling algorithms
+- Multi-objective optimization
+- Adaptive sampling strategies
 
 ### Research Contributions
 This project aims to enable:
-1. **Methodological papers** on sampling standardization
+1. **Methodological papers** on spatial sampling standardization
 2. **Software papers** in *SoftwareX* or *JOSS*
 3. **Reproducible urban studies** using standardized protocols
+4. **Cross-domain applications** in environmental science, transportation, urban planning, and demographics
 
 ---
 

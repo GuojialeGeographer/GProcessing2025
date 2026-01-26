@@ -2,17 +2,17 @@
 
 **Authors**: Jiale Guo, Mingfeng Tang
 **Institution**: Politecnico di Milano
-**Date**: 2025-01-22
+**Date**: 2025-01-25
 **Study Area**: Hong Kong Island, Hong Kong SAR
 
 ## Abstract
 
-This case study demonstrates the application of SVIPro for designing a reproducible sampling protocol to assess urban green spaces in Hong Kong using Street View Imagery. We compare grid-based and road-network-based sampling strategies to evaluate their coverage characteristics and suitability for urban environment studies.
+This case study demonstrates the application of SpatialSamplingPro for designing a reproducible sampling protocol to assess urban green spaces in Hong Kong using spatial sampling. We compare grid-based and road-network-based sampling strategies to evaluate their coverage characteristics and suitability for urban environment studies.
 
 ## 1. Study Objectives
 
 ### Primary Objectives
-1. Design a reproducible sampling strategy for Street View Imagery collection
+1. Design a reproducible sampling strategy for spatial sampling collection
 2. Compare spatial coverage of grid vs. road-network sampling
 3. Quantify sampling density and efficiency metrics
 4. Establish best practices for SVI research in urban environments
@@ -61,7 +61,7 @@ boundary_gdf.to_file("hk_boundary.geojson", driver="GeoJSON")
 #### Strategy 1: Grid Sampling
 
 ```python
-from svipro import GridSampling, SamplingConfig
+from ssp import GridSampling, SamplingConfig
 
 # Grid sampling with 100m spacing
 grid_config = SamplingConfig(
@@ -84,7 +84,7 @@ print(f"Grid sampling: {len(grid_points)} points")
 #### Strategy 2: Road Network Sampling
 
 ```python
-from svipro import RoadNetworkSampling, SamplingConfig
+from ssp import RoadNetworkSampling, SamplingConfig
 
 # Road network sampling with 100m spacing
 road_config = SamplingConfig(
@@ -114,7 +114,7 @@ print(f"Road network sampling: {len(road_points)} points")
 ### 3.2 Comparison Analysis
 
 ```python
-from svipro import compare_strategies
+from ssp import compare_strategies
 
 # Compare strategies
 strategies = {
@@ -202,7 +202,7 @@ To ensure reproducibility, document all parameters:
 
 ```python
 # Export sampling protocol
-from svipro import SamplingConfig
+from ssp import SamplingConfig
 
 protocol = {
     'study': 'Hong Kong Urban Green Space Assessment',
@@ -244,7 +244,7 @@ with open('hk_protocol.yaml', 'w') as f:
 ### 5.1 Spatial Distribution Comparison
 
 ```python
-from svipro import plot_coverage_statistics
+from ssp import plot_coverage_statistics
 
 # Grid sampling statistics
 fig1 = plot_coverage_statistics(
@@ -268,7 +268,7 @@ fig2 = plot_coverage_statistics(
 
 ```python
 # Create interactive map
-from svipro.cli import create_interactive_map
+from ssp.cli import create_interactive_map
 
 # For grid sampling
 create_interactive_map(
@@ -339,7 +339,7 @@ create_interactive_map(
 
 ## 7. Conclusion
 
-This case study demonstrates the effective application of SVIPro for designing reproducible sampling protocols in urban environments. Key findings include:
+This case study demonstrates the effective application of SpatialSamplingPro for designing reproducible sampling protocols in urban environments. Key findings include:
 
 1. **Grid sampling** provides uniform coverage but lower practical accessibility
 2. **Road network sampling** offers realistic placement for SVI collection
@@ -381,7 +381,7 @@ Hong Kong Urban Green Space Sampling Case Study
 Complete reproduction code
 """
 
-from svipro import (
+from ssp import (
     GridSampling, RoadNetworkSampling, SamplingConfig,
     compare_strategies, plot_coverage_statistics
 )

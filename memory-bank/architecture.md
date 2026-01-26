@@ -1,13 +1,13 @@
-# SVIPro 项目架构（Architecture）
+# SpatialSamplingPro 项目架构（Architecture）
 
-**最后更新**: 2025-01-21
+**最后更新**: 2025-01-25
 
 ## 目录结构
 
 ```
 GProcessing2025/
 ├── src/
-│   ├── svipro/                    # 主包
+│   ├── ssp/                       # 主包 (SpatialSamplingPro)
 │   │   ├── __init__.py            # 包入口，导出核心类
 │   │   ├── sampling/              # 采样策略模块
 │   │   │   ├── __init__.py
@@ -178,7 +178,7 @@ SamplingVisualizer.plot_points()
    - 开发依赖：pytest, black, flake8等
    - 项目元数据：名称、版本、作者
 
-2. **src/svipro/sampling/base.py** - 核心架构
+2. **src/ssp/sampling/base.py** - 核心架构
    - `SamplingStrategy` 抽象基类
    - `SamplingConfig` 数据类
    - 定义所有采样策略的接口
@@ -254,7 +254,7 @@ sampling_protocol:
     density_pts_per_km2: float  # 采样密度
 
   reproducibility:
-    svipro_version: str         # SVIPro版本
+    ssp_version: str         # SpatialSamplingPro版本
     python_version: str         # Python版本
     dependencies: dict          # 关键依赖版本
 ```
@@ -265,7 +265,7 @@ sampling_protocol:
 
 ### 添加新的采样策略
 
-1. 在 `src/svipro/sampling/` 创建新文件
+1. 在 `src/ssp/sampling/` 创建新文件
 2. 继承 `SamplingStrategy` 基类
 3. 实现 `generate()` 方法
 4. 在 `__init__.py` 中导出
@@ -273,14 +273,14 @@ sampling_protocol:
 
 ### 添加新的可视化
 
-1. 在 `src/svipro/visualization/` 创建新函数
+1. 在 `src/ssp/visualization/` 创建新函数
 2. 接受 GeoDataFrame 作为输入
 3. 返回地图或图表对象
 4. 在CLI中添加对应命令
 
 ### 添加新的导出格式
 
-1. 在 `src/svipro/metadata/export.py` 添加函数
+1. 在 `src/ssp/metadata/export.py` 添加函数
 2. 实现 `to_<format>()` 方法
 3. 处理格式特定的元数据
 4. 更新单元测试

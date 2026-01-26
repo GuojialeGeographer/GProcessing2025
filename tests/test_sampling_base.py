@@ -10,7 +10,7 @@ from shapely.geometry import Polygon, box, Point
 from shapely import wkt
 import geopandas as gpd
 
-from svipro.sampling.base import SamplingConfig, SamplingStrategy
+from ssp.sampling.base import SamplingConfig, SamplingStrategy
 
 
 class TestSamplingConfig:
