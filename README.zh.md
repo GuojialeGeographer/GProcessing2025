@@ -29,6 +29,12 @@ SpatialSamplingPro 解决了城市研究中的一个关键方法学缺口：**�
 
 ---
 
+## 📽️ 项目演示
+
+**[下载项目演示文稿（中文）](SpatialSamplingPro.pptx)** - SpatialSamplingPro框架的完整演示
+
+---
+
 ## 👥 作者
 
 - **Jiale Guo** - [jiale.guo@mail.polimi.it](mailto:jiale.guo@mail.polimi.it)

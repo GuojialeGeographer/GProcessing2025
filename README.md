@@ -29,6 +29,12 @@ A **scientific, reproducible, and documented** spatial sampling design framework
 
 ---
 
+## 📽️ Presentation
+
+**[Download Project Presentation (English)](SpatialSamplingPro_En.pptx)** - Comprehensive presentation of the SpatialSamplingPro framework
+
+---
+
 ## 👥 Authors
 
 - **Jiale Guo** - [jiale.guo@mail.polimi.it](mailto:jiale.guo@mail.polimi.it)
