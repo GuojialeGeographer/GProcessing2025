@@ -14,6 +14,7 @@ import geopandas as gpd
 import pytest
 from click.testing import CliRunner
 from shapely.geometry import box
+from shapely import to_wkt
 
 from ssp.cli import cli
 
@@ -31,8 +32,12 @@ def temp_boundary_file():
     boundary = box(0, 0, 0.1, 0.1)
 
     with tempfile.NamedTemporaryFile(mode='w', suffix='.geojson', delete=False) as f:
-        # Write as GeoJSON
-        geojson.dump(geojson.Feature(geometry=geojson.loads(boundary.to_wkt()), properties={}), f)
+        # Write as GeoJSON using shapely's __geo_interface__
+        feature = geojson.Feature(
+            geometry=geojson.loads(json.dumps(boundary.__geo_interface__)),
+            properties={}
+        )
+        geojson.dump(feature, f)
         temp_path = f.name
 
     yield temp_path
@@ -58,7 +63,7 @@ class TestCLI:
 
     def test_cli_main_command(self, runner):
         """Test that the main CLI command works."""
-        result = runner.invoke(cli)
+        result = runner.invoke(cli, ['--help'])
         assert result.exit_code == 0
         assert 'SpatialSamplingPro' in result.output or 'Usage:' in result.output
 
@@ -361,10 +366,9 @@ class TestValidationErrorHandling:
             '--output', output_path
         ])
 
-        # Should fail or create directory
-        # Click's validation callback creates the directory, so this should succeed
-        # But it might fail later when trying to write
-        assert result.exit_code in [0, 1]
+        # Should fail with validation error (exit code 2 for Click parameter errors)
+        assert result.exit_code != 0
+        assert 'Cannot create output directory' in result.output or 'not found' in result.output.lower()
 
 
 class TestHelpCommands:
